@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
 import Login from "../pages/Auth/Login";
+
 import Register from "../pages/Auth/Register";
 
 import ProtectedRoute from "./ProtectedRoute";
@@ -12,6 +13,10 @@ import Profile from "../pages/Profile/Profile";
 import ChangePassword from "../pages/ChangePassword/ChangePassword";
 
 import ForgotPassword from "../pages/Auth/ForgotPassword";
+
+import ProductDetail from "../pages/Product/ProductDetail";
+
+import ProductForm from "../pages/Product/ProductForm";
 
 const AppRoutes = () => {
 
@@ -52,6 +57,14 @@ const AppRoutes = () => {
                 element={<ForgotPassword />}
             />
             
+            <Route path="/products/:id"
+                element={<ProductDetail />}
+            />
+
+            <Route
+                path="/admin/products/create"
+                element={<ProductForm />}
+            />
         </Routes>
 
     );
