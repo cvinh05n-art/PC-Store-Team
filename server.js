@@ -7,6 +7,7 @@ const cors = require("cors");
 // Import routes
 const categoryRoutes = require("./routes/category.route");
 const brandRoutes = require("./routes/brand.route");
+const orderRoutes = require("./routes/order.route");
 
 const app = express();
 
@@ -26,8 +27,10 @@ app.get("/", (req, res) => {
 // Đăng ký routes
 app.use("/api/categories", categoryRoutes);
 app.use("/api/brands", brandRoutes);
+app.use("/api/orders", orderRoutes);
 
 // Xử lý đường dẫn API không tồn tại
+// Phải đặt sau tất cả routes
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -36,6 +39,7 @@ app.use((req, res) => {
 });
 
 // Middleware xử lý lỗi chung
+// Phải đặt cuối cùng
 app.use((err, req, res, next) => {
   console.error(err);
 
@@ -49,7 +53,8 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 const MONGO_URI =
-  process.env.MONGO_URI || "mongodb://127.0.0.1:27017/product_management";
+  process.env.MONGO_URI ||
+  "mongodb://127.0.0.1:27017/product_management";
 
 // Kết nối MongoDB rồi chạy server
 mongoose
