@@ -18,6 +18,10 @@ import ProductDetail from "../pages/Product/ProductDetail";
 
 import ProductForm from "../pages/Product/ProductForm";
 
+import CategoryForm from "../pages/Category/CategoryForm";
+
+import BrandList from "../pages/Brand/BrandList";
+
 const AppRoutes = () => {
 
     return (
@@ -64,6 +68,20 @@ const AppRoutes = () => {
             <Route
                 path="/admin/products/create"
                 element={<ProductForm />}
+            />
+            <Route
+                path="/admin/products/edit/:id"
+                element={<ProductForm />}
+            />
+
+            <Route
+                path="/admin/categories/create"
+                element={<CategoryForm />}
+            />
+
+            <Route
+                path="/admin/categories/edit/:id"
+                element={<CategoryForm />}
             />
         </Routes>
 
