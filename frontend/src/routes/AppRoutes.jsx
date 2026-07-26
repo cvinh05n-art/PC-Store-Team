@@ -16,11 +16,33 @@ import ForgotPassword from "../pages/Auth/ForgotPassword";
 
 import ProductDetail from "../pages/Product/ProductDetail";
 
-import ProductForm from "../pages/Product/ProductForm";
-
 import CategoryForm from "../pages/Category/CategoryForm";
 
 import BrandList from "../pages/Brand/BrandList";
+
+import BrandForm from "../pages/Brand/BrandForm";
+
+import Cart from "../pages/Cart/Cart";
+
+import Checkout from "../pages/Order/Checkout";
+
+import OrderHistory from "../pages/Order/OrderHistory";
+
+import Dashboard from "../pages/Admin/Dashboard";
+
+import ProductManagement 
+from "../pages/Admin/Product/ProductManagement";
+
+import ProductCreate from "../pages/Admin/Product/ProductCreate";
+
+import ProductEdit 
+from "../pages/Admin/Product/ProductEdit";
+
+import OrderManagement 
+from "../pages/Admin/Order/OrderManagement";
+
+import UserManagement 
+from "../pages/Admin/User/UserManagement";
 
 const AppRoutes = () => {
 
@@ -66,22 +88,120 @@ const AppRoutes = () => {
             />
 
             <Route
-                path="/admin/products/create"
-                element={<ProductForm />}
-            />
-            <Route
-                path="/admin/products/edit/:id"
-                element={<ProductForm />}
-            />
-
-            <Route
                 path="/admin/categories/create"
-                element={<CategoryForm />}
+                element={
+                <ProtectedRoute role="ADMIN">
+                    <CategoryForm />
+                </ProtectedRoute>
+                }
             />
 
             <Route
                 path="/admin/categories/edit/:id"
-                element={<CategoryForm />}
+                element={
+                <ProtectedRoute role="ADMIN">
+                    <CategoryForm />
+                </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/admin/brands"
+                element={
+                <ProtectedRoute role="ADMIN">
+                    <BrandList />
+                </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/admin/brands/create"
+                element={
+                <ProtectedRoute role="ADMIN">
+                    <BrandForm />
+                </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/admin/brands/edit/:id"
+                element={
+                    <ProtectedRoute role="ADMIN">
+                    <BrandForm />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/cart"
+                element={
+                <ProtectedRoute>
+                    <Cart />
+                </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/checkout"
+                element={
+                <ProtectedRoute>
+                    <Checkout />
+                </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/orders"
+                element={
+                <ProtectedRoute>
+                    <OrderHistory />
+                </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/admin"
+                element={
+                    <ProtectedRoute role="ADMIN">
+                    <Dashboard />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/admin/products"
+                element={
+                <ProtectedRoute role="ADMIN">
+                <ProductManagement />
+                </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/admin/products/create"
+                element={
+                <ProtectedRoute role="ADMIN">
+                <ProductCreate />
+                </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/admin/products/edit/:id"
+                element={
+                <ProtectedRoute role="ADMIN">
+                    <ProductEdit />
+                </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/admin/users"
+                element={
+                <ProtectedRoute role="ADMIN">
+                    <UserManagement />
+                </ProtectedRoute>
+                }
             />
         </Routes>
 

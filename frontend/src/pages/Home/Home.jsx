@@ -1,33 +1,21 @@
-import { useAuth } from "../../contexts/AuthContext";
+import Navbar from "../../components/layout/Navbar";
+import Footer from "../../components/layout/Footer";
 
 const Home = () => {
-
-    const { user, logout } = useAuth();
-
     return (
+        <>
+            <Navbar />
 
-        <div style={{ padding: "40px" }}>
+            <div style={{minHeight:"70vh",padding:"40px"}}>
 
-            <h1>Computer Store</h1>
+                <h1>Trang chủ</h1>
 
-            <hr />
+            </div>
 
-            <h2>Xin chào</h2>
+            <Footer />
 
-            <p>{user?.fullName}</p>
-
-            <p>{user?.email}</p>
-
-            <button onClick={logout}>
-
-                Đăng xuất
-
-            </button>
-
-        </div>
-
+        </>
     );
-
 };
 
 export default Home;

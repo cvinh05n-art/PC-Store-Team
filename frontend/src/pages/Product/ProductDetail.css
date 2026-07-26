@@ -1,0 +1,40 @@
+.product-detail{
+    display:flex;
+    gap:50px;
+    padding:50px;
+}
+
+.product-image{
+    flex:1;
+}
+
+.product-image img{
+    width:100%;
+}
+
+.product-info{
+    flex:1;
+}
+
+.product-info h1{
+    margin-bottom:20px;
+}
+
+.product-info h2{
+    color:red;
+    margin-bottom:20px;
+}
+
+.product-info p{
+    line-height:1.8;
+    margin-bottom:30px;
+}
+
+.product-info button{
+    padding:12px 30px;
+    border:none;
+    background:#1976d2;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}

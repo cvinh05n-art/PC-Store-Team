@@ -15,6 +15,10 @@ import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 import Toast from '../../components/common/Toast';
 
+import authApi from "../../api/authApi";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 import '../../components/common/Toast.css';
 
 const Login = () => {
@@ -34,30 +38,88 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async(e)=>{
+
+
     e.preventDefault();
 
-    try {
-      setLoading(true);
 
-      const res = await authService.login(formData);
+    try{
 
-      const { login } = useAuth();
 
-      if (res.user) {
-        login(res.user, res.token);
-      }
+        const response = await authApi.login(form);
 
-      alert("Đăng nhập thành công");
 
-      navigate("/");
-    } catch (error) {
-      alert(error.response?.data?.message || "Đăng nhập thất bại");
-    } finally {
-      setLoading(false);
+
+        const {
+
+            user,
+
+            token
+
+        } = response.data;
+
+
+
+        login(
+
+            user,
+
+            token
+
+        );
+
+
+
+        alert(
+            "Đăng nhập thành công"
+        );
+
+
+
+        navigate("/");
+
+
     }
-  };
 
+
+    catch(error){
+
+
+        console.log(error);
+
+
+        alert(
+            "Đăng nhập thất bại"
+        );
+
+
+    }
+
+
+};
+  const { login } = useAuth();
+
+  const navigate = useNavigate();
+
+  const [form,setForm] = useState({
+
+    email:"",
+
+    password:""
+
+});
+const handleChange = (e)=>{
+
+    setForm({
+
+        ...form,
+
+        [e.target.name]:e.target.value
+
+    });
+
+};
   return (
     <div className="login-page">
       <div className="login-card">
