@@ -23,6 +23,10 @@ const Navbar = () => {
 
                 <Link to="/cart">Giỏ hàng</Link>
 
+                <Link to="/profile">Hồ sơ</Link>
+
+                <Link to="/change-password">Đổi mật khẩu</Link>
+
             </div>
 
             <div className="user-info">
@@ -40,7 +44,7 @@ const Navbar = () => {
                                 <strong> {user?.fullName}</strong>
 
                             </Link>
-                            
+
                             <button onClick={logout}>
 
                                 Đăng xuất

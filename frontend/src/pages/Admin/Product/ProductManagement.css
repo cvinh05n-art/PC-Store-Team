@@ -1,0 +1,54 @@
+.product-management{
+
+    padding:40px;
+
+}
+
+
+
+.header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-bottom:30px;
+
+}
+
+
+
+.header button{
+
+    padding:10px 20px;
+
+}
+
+
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+
+
+th,
+td{
+
+    border:1px solid #ddd;
+
+    padding:12px;
+
+}
+
+
+
+td button{
+
+    margin-right:10px;
+
+}
