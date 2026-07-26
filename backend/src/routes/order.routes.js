@@ -47,6 +47,12 @@ router.patch(
   orderController.updateOrderStatus
 );
 
+router.get(
+  "/:id/tracking",
+  auth,
+  orderController.getOrderTracking
+);
+
 // Đặt route /:id ở cuối
 router.get(
   "/:id",

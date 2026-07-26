@@ -86,11 +86,54 @@ exports.getOrderById = async (req, res) => {
   }
 };
 
+exports.getOrderTracking = async (req, res) => {
+  try {
+    const order = await orderService.getOrderTracking(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy đơn hàng"
+      });
+    }
+
+    const ownerId = order.user.toString();
+
+    if (req.user.role !== "admin" && ownerId !== req.user.id) {
+      return res.status(403).json({
+        success: false,
+        message: "Bạn không có quyền theo dõi đơn hàng này"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: {
+        orderId: order._id,
+        currentStatus: order.orderStatus,
+        paymentStatus: order.paymentStatus,
+        history: order.statusHistory,
+        createdAt: order.createdAt,
+        updatedAt: order.updatedAt
+      }
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "ID đơn hàng không hợp lệ"
+    });
+  }
+};
+
 exports.updateOrderStatus = async (req, res) => {
   try {
+    const { orderStatus, note } = req.body;
+
     const order = await orderService.updateOrderStatus(
       req.params.id,
-      req.body.orderStatus
+      orderStatus,
+      req.user.id,
+      note
     );
 
     res.status(200).json({

@@ -30,8 +30,48 @@ const orderItemSchema = new mongoose.Schema(
   }
 );
 
+const statusHistorySchema = new mongoose.Schema(
+  {
+    status: {
+      type: String,
+      enum: [
+        "pending",
+        "confirmed",
+        "shipping",
+        "delivered",
+        "cancelled"
+      ],
+      required: true
+    },
+
+    note: {
+      type: String,
+      default: "",
+      trim: true
+    },
+
+    updatedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null
+    },
+
+    updatedAt: {
+      type: Date,
+      default: Date.now
+    }
+  },
+  {
+    _id: false
+  }
+);
 const orderSchema = new mongoose.Schema(
   {
+    statusHistory: {
+      type: [statusHistorySchema],
+      default: []
+    },
+
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -61,6 +101,7 @@ const orderSchema = new mongoose.Schema(
         required: true,
         trim: true
       }
+      
     },
 
     paymentMethod: {
