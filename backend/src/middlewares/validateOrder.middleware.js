@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 const validateCreateOrder = (req, res, next) => {
   const { items, shippingAddress, paymentMethod } = req.body;
 
@@ -9,10 +11,10 @@ const validateCreateOrder = (req, res, next) => {
   }
 
   for (const item of items) {
-    if (!item.product) {
+    if (!mongoose.isValidObjectId(item.product)) {
       return res.status(400).json({
         success: false,
-        message: "Thiếu ID sản phẩm"
+        message: "ID sản phẩm không hợp lệ"
       });
     }
 
@@ -25,10 +27,9 @@ const validateCreateOrder = (req, res, next) => {
   }
 
   if (
-    !shippingAddress ||
-    !shippingAddress.fullName ||
-    !shippingAddress.phone ||
-    !shippingAddress.address
+    !shippingAddress?.fullName?.trim() ||
+    !shippingAddress?.phone?.trim() ||
+    !shippingAddress?.address?.trim()
   ) {
     return res.status(400).json({
       success: false,
@@ -36,9 +37,10 @@ const validateCreateOrder = (req, res, next) => {
     });
   }
 
-  const paymentMethods = ["COD", "BANK_TRANSFER"];
-
-  if (paymentMethod && !paymentMethods.includes(paymentMethod)) {
+  if (
+    paymentMethod &&
+    !["COD", "BANK_TRANSFER"].includes(paymentMethod)
+  ) {
     return res.status(400).json({
       success: false,
       message: "Phương thức thanh toán không hợp lệ"

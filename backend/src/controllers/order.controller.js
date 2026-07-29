@@ -65,9 +65,12 @@ exports.getOrderById = async (req, res) => {
       });
     }
 
-    const ownerId = order.user._id.toString();
+    const ownerId = (order.user._id || order.user).toString();
 
-    if (req.user.role !== "admin" && ownerId !== req.user.id) {
+    if (
+      String(req.user.role).toLowerCase() !== "admin" &&
+      ownerId !== String(req.user.id)
+    ) {
       return res.status(403).json({
         success: false,
         message: "Bạn không có quyền xem đơn hàng này"
@@ -99,7 +102,10 @@ exports.getOrderTracking = async (req, res) => {
 
     const ownerId = order.user.toString();
 
-    if (req.user.role !== "admin" && ownerId !== req.user.id) {
+    if (
+      String(req.user.role).toLowerCase() !== "admin" &&
+      ownerId !== String(req.user.id)
+    ) {
       return res.status(403).json({
         success: false,
         message: "Bạn không có quyền theo dõi đơn hàng này"
@@ -120,7 +126,7 @@ exports.getOrderTracking = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       success: false,
-      message: "ID đơn hàng không hợp lệ"
+      message: error.message
     });
   }
 };
