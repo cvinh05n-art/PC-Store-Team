@@ -1,25 +1,17 @@
-const validateBrand = (req, res, next) => {
-  const { name, status } = req.body;
+const express = require("express");
 
-  if (!name || !name.trim()) {
-    return res.status(400).json({
-      success: false,
-      message: "Tên thương hiệu không được để trống"
-    });
-  }
+const brandController = require("../controllers/brand.controller");
+const auth = require("../middlewares/auth.middleware");
 
-  if (status !== undefined && typeof status !== "boolean") {
-    return res.status(400).json({
-      success: false,
-      message: "Trạng thái phải là true hoặc false"
-    });
-  }
+const router = express.Router();
 
-  req.body.name = name.trim();
-  next();
-};
+// Xem danh sách và chi tiết thương hiệu
+router.get("/", brandController.getBrands);
+router.get("/:id", brandController.getBrandById);
 
-module.exports = {
-  validateCategory,
-  validateBrand
-};
+// Thêm, sửa và xóa thương hiệu
+router.post("/", auth, brandController.createBrand);
+router.put("/:id", auth, brandController.updateBrand);
+router.delete("/:id", auth, brandController.deleteBrand);
+
+module.exports = router;
