@@ -18,7 +18,18 @@ const auth = (req, res, next) => {
       process.env.JWT_SECRET || "secret_key"
     );
 
-    req.user = decoded;
+    req.user = {
+      ...decoded,
+      id: decoded.id || decoded.userId || decoded.sub
+    };
+
+    if (!req.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Token không chứa thông tin người dùng"
+      });
+    }
+
     next();
   } catch (error) {
     return res.status(401).json({

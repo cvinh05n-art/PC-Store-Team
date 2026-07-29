@@ -80,7 +80,11 @@ const orderSchema = new mongoose.Schema(
 
     items: {
       type: [orderItemSchema],
-      required: true
+      required: true,
+      validate: {
+        validator: (items) => items.length > 0,
+        message: "Đơn hàng phải có ít nhất một sản phẩm"
+      }
     },
 
     shippingAddress: {
@@ -141,6 +145,11 @@ const orderSchema = new mongoose.Schema(
     },
 
     cancelledAt: {
+      type: Date,
+      default: null
+    },
+
+    deliveredAt: {
       type: Date,
       default: null
     }

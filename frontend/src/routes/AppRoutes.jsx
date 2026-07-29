@@ -216,6 +216,15 @@ const AppRoutes = () => {
                 </ProtectedRoute>
                 }
             />
+
+            <Route
+                path="/admin/orders"
+                element={
+                    <ProtectedRoute role="ADMIN">
+                        <OrderManagement />
+                    </ProtectedRoute>
+                }
+            />
         </Routes>
 
     );
