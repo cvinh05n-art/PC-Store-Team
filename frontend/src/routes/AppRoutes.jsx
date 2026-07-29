@@ -1,5 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
+import ProductList from "../pages/Product/ProductList";
+
 import Login from "../pages/Auth/Login";
 
 import Register from "../pages/Auth/Register";
@@ -83,13 +85,24 @@ const AppRoutes = () => {
                 element={<ForgotPassword />}
             />
             
-            <Route path="/products/:id"
-                element={<ProductDetail />}
-            />
+            <Route path="/forgot-password"
+        element={<ForgotPassword />}
+    />
 
-            <Route
-                path="/admin/categories/create"
-                element={
+        <Route
+            path="/products"
+            element={<ProductList />}
+        />
+
+        <Route path="/products/:id"
+            element={<ProductDetail />}
+        />
+        <Route path="/products/:id"
+            element={<ProductDetail />}
+        />
+        <Route
+            path="/admin/categories/create"
+            element={
                 <ProtectedRoute role="ADMIN">
                     <CategoryForm />
                 </ProtectedRoute>
