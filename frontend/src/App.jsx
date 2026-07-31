@@ -2,7 +2,6 @@ import AppRoutes from "./routes/AppRoutes";
 
 import { CartProvider } from "./contexts/CartContext";
 
-
 function App() {
 
     return (
@@ -16,6 +15,5 @@ function App() {
     );
 
 }
-
 
 export default App;
