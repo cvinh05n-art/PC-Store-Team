@@ -1,40 +1,132 @@
 import { Link } from "react-router-dom";
+import { useCart } from "../../context/CartContext";
 import "./ProductCard.css";
 
-const ProductCard = ({ product, onDelete }) => {
-  return (
-    <div className="product-card">
-      <img
-        src={product.image}
-        alt={product.name}
-      />
+const ProductCard = ({
+    product,
+    onDelete,
+    isAdmin = false
+}) => {
 
-      <h3>{product.name}</h3>
+    const { addToCart } = useCart();
 
-      <p className="price">
-        {product.price.toLocaleString()} đ
-      </p>
+    return (
 
-      <div className="product-actions">
-        <Link to={`/products/${product.id}`}>
-          <button>Xem chi tiết</button>
-        </Link>
+        <div className="product-card">
 
-        <Link to={`/admin/products/edit/${product.id}`}>
-          <button className="edit-btn">
-            Sửa
-          </button>
-        </Link>
+            <div className="product-image">
 
-        <button
-          className="delete-btn"
-          onClick={() => onDelete(product.id)}
-        >
-          Xóa
-        </button>
-      </div>
-    </div>
-  );
+                <img
+                    src={product.image}
+                    alt={product.name}
+                />
+
+                <span className="badge">
+
+                    Mới
+
+                </span>
+
+            </div>
+
+            <div className="product-content">
+
+                <p className="category">
+
+                    {product.category}
+
+                </p>
+
+                <h3>
+
+                    {product.name}
+
+                </h3>
+
+                <p className="brand">
+
+                    Thương hiệu: {product.brand}
+
+                </p>
+
+                <div className="rating">
+
+                    ⭐⭐⭐⭐⭐
+
+                    <span>(5.0)</span>
+
+                </div>
+
+                <p className="price">
+
+                    {Number(product.price).toLocaleString()} đ
+
+                </p>
+
+                <p className="stock">
+
+                    ✔ Còn hàng
+
+                </p>
+
+                <div className="product-actions">
+
+                    <Link to={`/products/${product.id}`}>
+
+                        <button className="detail-btn">
+
+                            Xem chi tiết
+
+                        </button>
+
+                    </Link>
+
+                    {isAdmin ? (
+
+                        <>
+
+                            <Link to={`/admin/products/edit/${product.id}`}>
+
+                                <button className="edit-btn">
+
+                                    Sửa
+
+                                </button>
+
+                            </Link>
+
+                            <button
+                                className="delete-btn"
+                                onClick={() => onDelete(product.id)}
+                            >
+
+                                Xóa
+
+                            </button>
+
+                        </>
+
+                    ) : (
+
+                        <button
+                            className="cart-btn"
+                            onClick={() => addToCart(product)}
+                        >
+
+                            🛒 Thêm vào giỏ
+
+                        </button>
+
+                    )}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    );
+
 };
 
 export default ProductCard;

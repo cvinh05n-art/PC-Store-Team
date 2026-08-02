@@ -12,7 +12,6 @@
 
 }
 
-
 .cart-item img{
 
     width:120px;
@@ -23,15 +22,11 @@
 
 }
 
-
-
 .cart-info{
 
     flex:1;
 
 }
-
-
 
 .quantity{
 
@@ -43,8 +38,6 @@
 
 }
 
-
-
 .quantity button{
 
     width:35px;
@@ -52,8 +45,6 @@
     height:35px;
 
 }
-
-
 
 .remove-btn{
 

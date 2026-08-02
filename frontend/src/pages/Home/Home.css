@@ -1,0 +1,30 @@
+.home{
+    padding:40px;
+    background:#f5f7fa;
+}
+.home h1{
+    margin-bottom:30px;
+    text-align:center;
+}
+.toolbar{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:30px;
+    gap:20px;
+}
+.toolbar input{
+    flex:1;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+.toolbar select{
+    width:200px;
+    padding:12px;
+    border-radius:8px;
+}
+.product-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:25px;
+}

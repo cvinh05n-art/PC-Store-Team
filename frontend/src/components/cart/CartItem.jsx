@@ -1,6 +1,5 @@
 import "./CartItem.css";
 
-
 const CartItem = ({
     item,
     onIncrease,
@@ -8,11 +7,9 @@ const CartItem = ({
     onRemove
 }) => {
 
-
     return (
 
         <div className="cart-item">
-
 
             <img
 
@@ -22,14 +19,11 @@ const CartItem = ({
 
             />
 
-
             <div className="cart-info">
-
 
                 <h3>
                     {item.name}
                 </h3>
-
 
                 <p>
                     Giá:
@@ -37,10 +31,7 @@ const CartItem = ({
                     {item.price.toLocaleString()} đ
                 </p>
 
-
-
                 <div className="quantity">
-
 
                     <button
 
@@ -52,15 +43,11 @@ const CartItem = ({
                         -
                     </button>
 
-
-
                     <span>
 
                         {item.quantity}
 
                     </span>
-
-
 
                     <button
 
@@ -74,13 +61,9 @@ const CartItem = ({
 
                     </button>
 
-
                 </div>
 
-
             </div>
-
-
 
             <button
 
@@ -95,7 +78,6 @@ const CartItem = ({
                 Xóa
 
             </button>
-
 
         </div>
 

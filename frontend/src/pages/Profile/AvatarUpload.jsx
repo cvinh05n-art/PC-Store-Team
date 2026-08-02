@@ -19,48 +19,34 @@ const AvatarUpload = () => {
 
     const file = e.target.files[0];
 
-
     if(!file) return;
-
-
 
     const imageUrl = URL.createObjectURL(file);
 
-
     setAvatar(imageUrl);
-
-
 
     try{
 
-
         const result = await uploadAvatar(file);
-
 
         console.log(
             result
         );
 
-
         alert(
             "Upload avatar thành công"
         );
 
-
     }
     catch(error){
 
-
         console.log(error);
-
 
         alert(
             "Upload thất bại"
         );
 
-
     }
-
 
     };
 

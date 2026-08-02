@@ -1,119 +1,126 @@
-import Navbar from "../../components/layout/Navbar";
-
+import { Link } from "react-router-dom";
 import "./Dashboard.css";
-
 
 const Dashboard = () => {
 
+    const data = {
 
-    const stats = [
+        products: 120,
 
-        {
-            title:"Tổng sản phẩm",
+        users: 58,
 
-            value:120
+        orders: 36,
 
-        },
+        revenue: 185600000
 
-
-        {
-            title:"Tổng đơn hàng",
-
-            value:56
-
-        },
-
-
-        {
-            title:"Người dùng",
-
-            value:320
-
-        },
-
-
-        {
-            title:"Doanh thu",
-
-            value:"250.000.000 đ"
-
-        }
-
-    ];
-
-
+    };
 
     return (
 
-        <>
+        <div className="dashboard">
 
+            <h1>
 
-            <Navbar />
+                Dashboard Admin
 
+            </h1>
 
-            <div className="dashboard">
+            <div className="dashboard-cards">
 
+                <div className="card">
 
-                <h1>
+                    <h2>📦</h2>
 
-                    Admin Dashboard
+                    <h3>{data.products}</h3>
 
-                </h1>
-
-
-
-                <div className="dashboard-grid">
-
-
-                    {
-
-                        stats.map((item,index)=>(
-
-
-                            <div
-
-                                className="stat-card"
-
-                                key={index}
-
-                            >
-
-
-                                <h3>
-
-                                    {item.title}
-
-                                </h3>
-
-
-
-                                <p>
-
-                                    {item.value}
-
-                                </p>
-
-
-                            </div>
-
-
-                        ))
-
-                    }
-
+                    <p>Sản phẩm</p>
 
                 </div>
 
+                <div className="card">
 
+                    <h2>👤</h2>
+
+                    <h3>{data.users}</h3>
+
+                    <p>Người dùng</p>
+
+                </div>
+
+                <div className="card">
+
+                    <h2>🛒</h2>
+
+                    <h3>{data.orders}</h3>
+
+                    <p>Đơn hàng</p>
+
+                </div>
+
+                <div className="card">
+
+                    <h2>💰</h2>
+
+                    <h3>
+
+                        {data.revenue.toLocaleString()} đ
+
+                    </h3>
+
+                    <p>Doanh thu</p>
+
+                </div>
 
             </div>
 
+            <div className="dashboard-menu">
 
-        </>
+                <Link to="/admin/products">
+
+                    <button>
+
+                        Quản lý sản phẩm
+
+                    </button>
+
+                </Link>
+
+                <Link to="/admin/orders">
+
+                    <button>
+
+                        Quản lý đơn hàng
+
+                    </button>
+
+                </Link>
+
+                <Link to="/admin/users">
+
+                    <button>
+
+                        Quản lý người dùng
+
+                    </button>
+
+                </Link>
+
+                <Link to="/admin/brands">
+
+                    <button>
+
+                        Quản lý thương hiệu
+
+                    </button>
+
+                </Link>
+
+            </div>
+
+        </div>
 
     );
 
 };
-
 
 export default Dashboard;

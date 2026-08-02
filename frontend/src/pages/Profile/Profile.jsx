@@ -36,31 +36,24 @@ const Profile = () => {
 
     e.preventDefault();
 
-
     try{
 
         const result = await updateProfile(formData);
 
-
         console.log(result);
-
 
         alert(
             "Cập nhật thành công"
         );
 
-
     }
     catch(error){
 
-
         console.log(error);
-
 
         alert(
             "Cập nhật thất bại"
         );
-
 
         }
 
@@ -78,9 +71,7 @@ const Profile = () => {
 
                     <h2>Thông tin cá nhân</h2>
 
-
                     <AvatarUpload />
-
 
                     <form onSubmit={handleSubmit}></form>
 

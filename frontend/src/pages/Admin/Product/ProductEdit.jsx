@@ -7,7 +7,6 @@ import "./ProductEdit.css";
 
 const ProductEdit = () => {
 
-
     const { id } = useParams();
 
     const navigate = useNavigate();
@@ -102,22 +101,17 @@ const ProductEdit = () => {
 
         <div className="product-edit">
 
-
             <h1>
 
                 Chỉnh sửa sản phẩm
 
             </h1>
 
-
-
             <form onSubmit={handleSubmit}>
-
 
                 <label>
                     Tên sản phẩm
                 </label>
-
 
                 <input
 
@@ -129,12 +123,9 @@ const ProductEdit = () => {
 
                 />
 
-
-
                 <label>
                     Giá
                 </label>
-
 
                 <input
 
@@ -148,12 +139,9 @@ const ProductEdit = () => {
 
                 />
 
-
-
                 <label>
                     Danh mục
                 </label>
-
 
                 <select
 
@@ -169,25 +157,19 @@ const ProductEdit = () => {
                         CPU
                     </option>
 
-
                     <option value="GPU">
                         GPU
                     </option>
-
 
                     <option value="RAM">
                         RAM
                     </option>
 
-
                 </select>
-
-
 
                 <label>
                     Thương hiệu
                 </label>
-
 
                 <select
 
@@ -203,25 +185,19 @@ const ProductEdit = () => {
                         Intel
                     </option>
 
-
                     <option value="AMD">
                         AMD
                     </option>
-
 
                     <option value="NVIDIA">
                         NVIDIA
                     </option>
 
-
                 </select>
-
-
 
                 <label>
                     Hình ảnh
                 </label>
-
 
                 <input
 
@@ -233,12 +209,9 @@ const ProductEdit = () => {
 
                 />
 
-
-
                 <label>
                     Mô tả
                 </label>
-
 
                 <textarea
 
@@ -249,8 +222,6 @@ const ProductEdit = () => {
                     onChange={handleChange}
 
                 />
-
-
 
                 <button type="submit">
 
@@ -266,6 +237,5 @@ const ProductEdit = () => {
 
     );
 };
-
 
 export default ProductEdit;

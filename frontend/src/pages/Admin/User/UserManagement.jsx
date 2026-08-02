@@ -2,9 +2,7 @@ import { useState } from "react";
 
 import "./UserManagement.css";
 
-
 const UserManagement = () => {
-
 
     const [users,setUsers] = useState([
 
@@ -51,15 +49,11 @@ const UserManagement = () => {
 
     ]);
 
-
-
     const handleStatus = (id)=>{
-
 
         setUsers(
 
             users.map(user =>
-
 
                 user.id === id
 
@@ -96,12 +90,9 @@ const UserManagement = () => {
 
     };
 
-
-
     return (
 
         <div className="user-management">
-
 
             <h1>
 
@@ -109,10 +100,7 @@ const UserManagement = () => {
 
             </h1>
 
-
-
             <table>
-
 
                 <thead>
 
@@ -134,46 +122,35 @@ const UserManagement = () => {
 
                 </thead>
 
-
-
                 <tbody>
-
 
                 {
 
                     users.map(user=>(
 
-
                         <tr key={user.id}>
-
 
                             <td>
                                 {user.id}
                             </td>
 
-
                             <td>
                                 {user.name}
                             </td>
-
 
                             <td>
                                 {user.email}
                             </td>
 
-
                             <td>
                                 {user.role}
                             </td>
-
 
                             <td>
                                 {user.status}
                             </td>
 
-
                             <td>
-
 
                                 <button
 
@@ -197,23 +174,17 @@ const UserManagement = () => {
 
                                 </button>
 
-
                             </td>
 
-
                         </tr>
-
 
                     ))
 
                 }
 
-
                 </tbody>
 
-
             </table>
-
 
         </div>
 

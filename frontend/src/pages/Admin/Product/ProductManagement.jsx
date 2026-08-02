@@ -1,172 +1,121 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
 import productApi from "../../../api/productApi";
-
 import "./ProductManagement.css";
 
 const ProductManagement = () => {
 
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [keyword, setKeyword] = useState("");
 
-    const [products,setProducts] = useState([]);
+    useEffect(() => {
 
-    const [loading,setLoading] = useState(true);
-    useEffect(()=>{
+        const fetchProducts = async () => {
 
+            try {
 
-    const fetchProducts = async()=>{
+                const response = await productApi.getAll();
 
+                setProducts(response.data);
 
-        try{
+            } catch (error) {
 
+                console.log("Lỗi lấy sản phẩm:", error);
 
-           const response = await productApi.getAll();
+            } finally {
 
-                console.log(response.data);
+                setLoading(false);
 
-                setProducts(
-                response.data
-            );
+            }
 
-        }
-        catch(error){
+        };
 
+        fetchProducts();
 
-            console.log(
-                "Lỗi lấy sản phẩm:",
-                error
-            );
+    }, []);
 
+    const handleDelete = async (id) => {
 
-        }
-        finally{
-
-
-            setLoading(false);
-
-
-        }
-
-
-    };
-
-
-
-    fetchProducts();
-
-
-    },[]);
-    const handleDelete = async(id)=>{
-
-
-    const confirmDelete = window.confirm(
-        "Bạn có chắc muốn xóa sản phẩm?"
-    );
-
-
-    if(!confirmDelete)
-        return;
-
-
-
-    try{
-
-
-        await productApi.delete(id);
-
-            setProducts(prevProducts =>
-
-            prevProducts.filter(
-
-                product => product.id !== id
-
-                )   
-
+        const confirmDelete = window.confirm(
+            "Bạn có chắc muốn xóa sản phẩm?"
         );
 
+        if (!confirmDelete) return;
 
-            alert(
-                "Xóa sản phẩm thành công"
+        try {
+
+            await productApi.delete(id);
+
+            setProducts(prevProducts =>
+                prevProducts.filter(product => product.id !== id)
             );
 
+            alert("Xóa sản phẩm thành công");
+
+        } catch (error) {
+
+            console.log("Lỗi xóa sản phẩm:", error);
+
+            alert("Xóa sản phẩm thất bại");
 
         }
-        catch(error){
-
-            console.log(
-                "Lỗi xóa sản phẩm:",
-                error
-            );
-
-
-            alert(
-                "Xóa sản phẩm thất bại"
-            );
-
-
-        }
-
 
     };
-    if(loading){
 
-        return (
+    if (loading) {
 
-            <h2>
-                Đang tải sản phẩm...
-            </h2>
-
-            );
+        return <h2>Đang tải sản phẩm...</h2>;
 
     }
+
+    const filteredProducts = products.filter(product =>
+        product.name.toLowerCase().includes(keyword.toLowerCase())
+    );
 
     return (
 
         <div className="product-management">
 
-
             <div className="header">
 
-
-                <h1>
-
-                    Quản lý sản phẩm
-
-                </h1>
-
-
+                <h1>Quản lý sản phẩm</h1>
 
                 <Link to="/admin/products/create">
 
-
-                    <button>
-
-                        Thêm sản phẩm
-
-                    </button>
-
+                    <button>+ Thêm sản phẩm</button>
 
                 </Link>
 
-
             </div>
 
-
+            <input
+                className="search"
+                type="text"
+                placeholder="🔍 Tìm kiếm sản phẩm..."
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+            />
 
             <table>
-
 
                 <thead>
 
                     <tr>
 
-                        <th>ID</th>
+                        <th>STT</th>
+
+                        <th>Ảnh</th>
 
                         <th>Tên sản phẩm</th>
 
                         <th>Giá</th>
 
                         <th>Danh mục</th>
+
+                        <th>Thương hiệu</th>
+
+                        <th>Trạng thái</th>
 
                         <th>Thao tác</th>
 
@@ -176,19 +125,23 @@ const ProductManagement = () => {
 
                 <tbody>
 
-                {
-
-                    products.map(product=>(
+                    {filteredProducts.map((product, index) => (
 
                         <tr key={product.id}>
 
-                            <td>
-                                {product.id}
-                            </td>
+                            <td>{index + 1}</td>
 
                             <td>
-                                {product.name}
+
+                                <img
+                                    src={product.image}
+                                    alt={product.name}
+                                    className="product-image"
+                                />
+
                             </td>
+
+                            <td>{product.name}</td>
 
                             <td>
 
@@ -196,8 +149,18 @@ const ProductManagement = () => {
 
                             </td>
 
+                            <td>{product.category}</td>
+
+                            <td>{product.brand}</td>
+
                             <td>
-                                {product.category}
+
+                                <span className="in-stock">
+
+                                    Còn hàng
+
+                                </span>
+
                             </td>
 
                             <td>
@@ -206,21 +169,20 @@ const ProductManagement = () => {
                                     to={`/admin/products/edit/${product.id}`}
                                 >
 
-                                    <button>
+                                    <button className="edit-btn">
 
-                                        Sửa
+                                        ✏️ Sửa
 
                                     </button>
 
                                 </Link>
 
                                 <button
-
-                                    onClick={()=>handleDelete(product.id)}
-
+                                    className="delete-btn"
+                                    onClick={() => handleDelete(product.id)}
                                 >
 
-                                    Xóa
+                                    🗑 Xóa
 
                                 </button>
 
@@ -228,9 +190,7 @@ const ProductManagement = () => {
 
                         </tr>
 
-                    ))
-
-                }
+                    ))}
 
                 </tbody>
 

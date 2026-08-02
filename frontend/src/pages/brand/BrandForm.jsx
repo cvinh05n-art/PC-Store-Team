@@ -3,15 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import "./BrandForm.css";
 
-
 const BrandForm = () => {
-
 
     const navigate = useNavigate();
 
     const { id } = useParams();
-
-
 
     const [brand,setBrand] = useState({
 
@@ -19,10 +15,7 @@ const BrandForm = () => {
 
     });
 
-
-
     const handleChange = (e)=>{
-
 
         setBrand({
 
@@ -32,20 +25,13 @@ const BrandForm = () => {
 
         });
 
-
     };
-
-
 
     const handleSubmit=(e)=>{
 
-
         e.preventDefault();
 
-
         console.log(brand);
-
-
 
         alert(
 
@@ -57,19 +43,13 @@ const BrandForm = () => {
 
         );
 
-
-
         navigate("/admin/brands");
 
-
     };
-
-
 
     return (
 
         <div className="brand-form">
-
 
             <h1>
 
@@ -85,18 +65,13 @@ const BrandForm = () => {
 
             </h1>
 
-
-
             <form onSubmit={handleSubmit}>
-
 
                 <label>
 
                     Tên thương hiệu
 
                 </label>
-
-
 
                 <input
 
@@ -112,10 +87,7 @@ const BrandForm = () => {
 
                 />
 
-
-
                 <button type="submit">
-
 
                     {
 
@@ -127,19 +99,14 @@ const BrandForm = () => {
 
                     }
 
-
                 </button>
 
-
             </form>
-
-
 
         </div>
 
     );
 
 };
-
 
 export default BrandForm;

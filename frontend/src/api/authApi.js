@@ -1,9 +1,6 @@
 import axiosClient from "./axiosClient";
 
-
-
 const authApi = {
-
 
     login(data){
 
@@ -17,8 +14,6 @@ const authApi = {
 
     },
 
-
-
     register(data){
 
         return axiosClient.post(
@@ -31,8 +26,6 @@ const authApi = {
 
     },
 
-
-
     logout(){
 
     localStorage.removeItem("token");
@@ -40,7 +33,6 @@ const authApi = {
     localStorage.removeItem("user");
 
     }
-
 
 };
 
