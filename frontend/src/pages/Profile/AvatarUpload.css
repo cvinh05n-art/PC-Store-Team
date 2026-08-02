@@ -6,7 +6,6 @@
 
 }
 
-
 .avatar-preview{
 
     width:120px;
@@ -23,8 +22,6 @@
 
 }
 
-
-
 .avatar-preview img{
 
     width:100%;
@@ -34,8 +31,6 @@
     object-fit:cover;
 
 }
-
-
 
 .avatar-placeholder{
 
@@ -54,8 +49,6 @@
     color:#777;
 
 }
-
-
 
 .upload-btn{
 

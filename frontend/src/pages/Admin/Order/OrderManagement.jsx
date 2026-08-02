@@ -1,252 +1,174 @@
-import { useState } from "react";
-
-import "./OrderManagement.css";
-
+import { useEffect, useState } from "react";
+import orderApi from "../../../api/orderApi";
 
 const OrderManagement = () => {
 
+    const [orders, setOrders] = useState([]);
 
-    const [orders,setOrders] = useState([
+    const [loading, setLoading] = useState(true);
 
-        {
-            id:"ORD001",
+    useEffect(() => {
 
-            customer:"Nguyễn Văn A",
+        const fetchOrders = async () => {
 
-            phone:"0123456789",
+            try {
 
-            total:8990000,
+                const response = await orderApi.getAll();
 
-            status:"Chờ xử lý"
+                setOrders(response.data);
 
-        },
+            }
+            catch (error) {
 
+                console.log(error);
 
-        {
-            id:"ORD002",
+            }
+            finally {
 
-            customer:"Trần Văn B",
+                setLoading(false);
 
-            phone:"0987654321",
+            }
 
-            total:18990000,
+        };
 
-            status:"Đang giao"
+        fetchOrders();
 
-        },
+    }, []);
+    const handleStatus = async (id, status) => {
 
+    try {
 
-        {
-            id:"ORD003",
-
-            customer:"Lê Văn C",
-
-            phone:"0909090909",
-
-            total:10990000,
-
-            status:"Đã giao"
-
-        }
-
-    ]);
-
-
-
-    const handleStatusChange = (id,status)=>{
-
+        await orderApi.updateStatus(id, status);
 
         setOrders(
 
-            orders.map(order =>
+           orders.map(order =>
 
-                order.id === id
+            order.id === id
 
-                ?
+            ? {
+                ...order,
+                status
+            }
 
-                {
+            : order
 
-                    ...order,
-
-                    status:status
-
-                }
-
-                :
-
-                order
-
-            )
+        )
 
         );
 
+    }
+    catch (error) {
+
+        console.log(error);
+
+    }
 
     };
 
+    if (loading) {
 
+        return <h2>Đang tải...</h2>;
+
+    }
 
     return (
 
-        <div className="order-management">
+    <div className="order-management">
 
+        <h1>Quản lý đơn hàng</h1>
 
-            <h1>
+        <table>
 
-                Quản lý đơn hàng
+            <thead>
 
-            </h1>
+                <tr>
 
+                    <th>ID</th>
 
+                    <th>Khách hàng</th>
 
-            <table>
+                    <th>Tổng tiền</th>
 
+                    <th>Trạng thái</th>
 
-                <thead>
+                </tr>
 
-                    <tr>
+            </thead>
 
-                        <th>
-                            Mã đơn
-                        </th>
+            <tbody>
 
+                {orders.map(order => (
 
-                        <th>
-                            Khách hàng
-                        </th>
+                    <tr key={order.id}>
 
+                        <td>{order.id}</td>
 
-                        <th>
-                            Số điện thoại
-                        </th>
+                        <td>{order.customer?.name}</td>
 
+                        <td>
 
-                        <th>
-                            Tổng tiền
-                        </th>
+                            {Number(order.totalPrice).toLocaleString()} đ
 
+                        </td>
 
-                        <th>
-                            Trạng thái
-                        </th>
+                        <td>
 
+                            <select
+
+                                value={order.status}
+
+                                onChange={(e) =>
+                                    handleStatus(
+                                        order.id,
+                                        e.target.value
+                                    )
+                                }
+
+                            >
+
+                                <option value="PENDING">
+
+                                    Đang xử lý
+
+                                </option>
+
+                                <option value="SHIPPING">
+
+                                    Đang giao
+
+                                </option>
+
+                                <option value="COMPLETED">
+
+                                    Hoàn thành
+
+                                </option>
+
+                                <option value="CANCELLED">
+
+                                    Đã hủy
+
+                                </option>
+
+                            </select>
+
+                        </td>
 
                     </tr>
 
-                </thead>
+                ))}
 
+            </tbody>
 
+        </table>
 
-                <tbody>
+    </div>
 
-
-                {
-
-                    orders.map(order => (
-
-                        <tr key={order.id}>
-
-
-                            <td>
-
-                                {order.id}
-
-                            </td>
-
-
-
-                            <td>
-
-                                {order.customer}
-
-                            </td>
-
-
-
-                            <td>
-
-                                {order.phone}
-
-                            </td>
-
-
-
-                            <td>
-
-                                {
-                                order.total.toLocaleString()
-                                }
-
-                                đ
-
-                            </td>
-
-
-
-                            <td>
-
-
-                                <select
-
-                                    value={order.status}
-
-                                    onChange={(e)=>
-
-                                        handleStatusChange(
-
-                                            order.id,
-
-                                            e.target.value
-
-                                        )
-
-                                    }
-
-                                >
-
-                                    <option>
-                                        Chờ xử lý
-                                    </option>
-
-
-                                    <option>
-                                        Đang giao
-                                    </option>
-
-
-                                    <option>
-                                        Đã giao
-                                    </option>
-
-
-                                    <option>
-                                        Đã hủy
-                                    </option>
-
-
-                                </select>
-
-
-                            </td>
-
-
-                        </tr>
-
-                    ))
-
-                }
-
-
-                </tbody>
-
-
-            </table>
-
-
-        </div>
-
-    );
+);
 
 };
+
 
 
 export default OrderManagement;

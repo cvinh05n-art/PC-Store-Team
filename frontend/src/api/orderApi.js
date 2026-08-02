@@ -38,6 +38,7 @@ const orderApi = {
 
     },
 
+
     getAll(){
 
     return axiosClient.get(
@@ -47,7 +48,7 @@ const orderApi = {
     );
 
     }
-
+    
 };
 
 export default orderApi;

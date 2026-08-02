@@ -1,24 +1,17 @@
 import axios from "axios";
 
-
 const API_URL = "http://localhost:5000/api/users/avatar";
-
 
 export const uploadAvatar = async(file)=>{
 
-
     const formData = new FormData();
-
 
     formData.append(
         "avatar",
         file
     );
 
-
     const token = localStorage.getItem("token");
-
-
 
     const response = await axios.post(
 
@@ -39,7 +32,6 @@ export const uploadAvatar = async(file)=>{
         }
 
     );
-
 
     return response.data;
 

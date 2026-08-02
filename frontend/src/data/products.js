@@ -10,7 +10,6 @@ const products = [
         "CPU Intel Core i5 thế hệ 14, 14 nhân 20 luồng"
     },
 
-
     {
         id:2,
         name:"RTX 4070 Super",
@@ -21,7 +20,6 @@ const products = [
         description:
         "Card đồ họa mạnh cho gaming"
     },
-
 
     {
         id:3,
@@ -35,6 +33,5 @@ const products = [
     }
 
 ];
-
 
 export default products;

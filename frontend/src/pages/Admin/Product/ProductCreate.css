@@ -12,8 +12,6 @@
 
 }
 
-
-
 .product-create form{
 
     display:flex;
@@ -21,8 +19,6 @@
     flex-direction:column;
 
 }
-
-
 
 .product-create input,
 .product-create select,
@@ -33,8 +29,6 @@
     margin-bottom:15px;
 
 }
-
-
 
 .product-create button{
 

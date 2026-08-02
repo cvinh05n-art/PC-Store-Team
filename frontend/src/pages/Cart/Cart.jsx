@@ -1,56 +1,70 @@
+import { Link } from "react-router-dom";
+
 import { useCart } from "../../context/CartContext";
 
 import CartItem from "../../components/cart/CartItem";
 
-import { Link } from "react-router-dom";
-
 import "./Cart.css";
 
-
 const Cart = () => {
-
 
     const {
 
         cart,
 
+        loading,
+
+        totalPrice,
+
         increaseQuantity,
 
         decreaseQuantity,
 
-        removeFromCart,
-
-        totalPrice
+        removeFromCart
 
     } = useCart();
 
+    if (loading) {
 
+        return (
 
-    if(cart.length === 0){
+            <h2>
 
+                Đang tải giỏ hàng...
+
+            </h2>
+
+        );
+
+    }
+
+    if (cart.length === 0) {
 
         return (
 
             <div className="cart-empty">
 
                 <h1>
+
                     Giỏ hàng trống
+
                 </h1>
 
-
                 <p>
+
                     Chưa có sản phẩm nào trong giỏ hàng
+
                 </p>
 
-
-                <Link to="/">
+                <Link to="/products">
 
                     <button>
+
                         Tiếp tục mua hàng
+
                     </button>
 
                 </Link>
-
 
             </div>
 
@@ -58,18 +72,15 @@ const Cart = () => {
 
     }
 
-
-
     return (
 
         <div className="cart">
 
-
             <h1>
+
                 Giỏ hàng
+
             </h1>
-
-
 
             {
 
@@ -93,10 +104,7 @@ const Cart = () => {
 
             }
 
-
-
             <div className="cart-total">
-
 
                 <h2>
 
@@ -104,11 +112,9 @@ const Cart = () => {
 
                     {" "}
 
-                    {totalPrice.toLocaleString()} đ
+                    {Number(totalPrice).toLocaleString()} đ
 
                 </h2>
-
-
 
                 <Link to="/checkout">
 
@@ -120,15 +126,12 @@ const Cart = () => {
 
                 </Link>
 
-
             </div>
-
 
         </div>
 
     );
 
 };
-
 
 export default Cart;

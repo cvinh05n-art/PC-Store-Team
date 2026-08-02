@@ -1,9 +1,7 @@
 import { Link } from "react-router-dom";
 import "./BrandTable.css";
 
-
 const BrandTable = ({ brands, onDelete }) => {
-
 
     return (
 
@@ -23,28 +21,22 @@ const BrandTable = ({ brands, onDelete }) => {
 
             </thead>
 
-
             <tbody>
-
 
                 {
                     brands.map((brand)=>(
 
                         <tr key={brand.id}>
 
-
                             <td>
                                 {brand.id}
                             </td>
-
 
                             <td>
                                 {brand.name}
                             </td>
 
-
                             <td>
-
 
                                 <Link 
                                     to={`/admin/brands/edit/${brand.id}`}
@@ -57,9 +49,6 @@ const BrandTable = ({ brands, onDelete }) => {
                                     </button>
 
                                 </Link>
-
-
-
                                 <button
 
                                     className="delete-btn"
@@ -74,24 +63,19 @@ const BrandTable = ({ brands, onDelete }) => {
 
                                 </button>
 
-
                             </td>
-
 
                         </tr>
 
                     ))
                 }
 
-
             </tbody>
-
 
         </table>
 
     );
 
 }
-
 
 export default BrandTable;

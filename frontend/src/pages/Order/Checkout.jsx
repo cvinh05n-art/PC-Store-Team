@@ -2,173 +2,135 @@ import { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import orderApi from "../../api/orderApi";
-
 import "./Order.css";
-
 
 const Checkout = () => {
 
-
     const navigate = useNavigate();
-
 
     const {
         cart,
         clearCart
-        } = useCart();
+    } = useCart();
 
+    const [customer, setCustomer] = useState({
 
+        name: "",
 
-    const [customer,setCustomer] = useState({
+        phone: "",
 
-        name:"",
-        phone:"",
-        address:""
+        address: ""
 
     });
 
-
-
-    const handleChange = (e)=>{
-
+    const handleChange = (e) => {
 
         setCustomer({
 
             ...customer,
 
-            [e.target.name]:e.target.value
+            [e.target.name]: e.target.value
 
         });
 
-
     };
-
-
 
     const total = cart.reduce(
 
-        (sum,item)=>
+        (sum, item) =>
 
-            sum + item.price * item.quantity
-
-        ,
+            sum + item.price * item.quantity,
 
         0
 
     );
 
-
-
-    const handleSubmit = (e)=>{
-
+    const handleSubmit = async (e) => {
 
         e.preventDefault();
 
+        if (cart.length === 0) {
 
+            alert("Giỏ hàng đang trống");
+
+            return;
+
+        }
 
         const order = {
 
             customer,
 
-            products:cart,
+            products: cart,
 
             total,
 
-            status:"Đang xử lý"
+            status: "Đang xử lý"
 
         };
-        try{
+
+        try {
 
             await orderApi.create(order);
 
-        clearCart();
+            await clearCart();
 
-        alert(
-            "Đặt hàng thành công"
-        );
+            alert("Đặt hàng thành công");
 
-        navigate("/orders");
+            navigate("/orders");
 
-        }   
-    catch(error){
-        console.log(
-            "Lỗi tạo đơn hàng:",
-            error
-        );
-
-        alert(
-            "Đặt hàng thất bại"
-        );
         }
+        catch (error) {
+
+            console.log("Lỗi tạo đơn hàng:", error);
+
+            alert("Đặt hàng thất bại");
+
+        }
+
     };
 
     return (
 
         <div className="checkout">
 
-            <h1>
-
-                Thanh toán
-
-            </h1>
+            <h1>Thanh toán</h1>
 
             <form onSubmit={handleSubmit}>
 
-                <label>
-                    Họ tên
-                </label>
+                <label>Họ tên</label>
 
                 <input
-
                     name="name"
-
                     value={customer.name}
-
                     onChange={handleChange}
-
                     placeholder="Nhập họ tên"
-
+                    required
                 />
 
-                <label>
-                    Số điện thoại
-                </label>
+                <label>Số điện thoại</label>
 
                 <input
-
                     name="phone"
-
                     value={customer.phone}
-
                     onChange={handleChange}
-
                     placeholder="Nhập số điện thoại"
-
+                    required
                 />
 
-                <label>
-                    Địa chỉ
-                </label>
+                <label>Địa chỉ</label>
 
                 <textarea
-
                     name="address"
-
                     value={customer.address}
-
                     onChange={handleChange}
-
                     placeholder="Nhập địa chỉ"
-
+                    required
                 />
 
                 <h2>
 
-                    Tổng tiền:
-
-                    {" "}
-
-                    {total.toLocaleString()} đ
+                    Tổng tiền: {Number(total).toLocaleString()} đ
 
                 </h2>
 

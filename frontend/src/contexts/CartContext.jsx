@@ -1,139 +1,211 @@
-import { 
-    createContext, 
-    useContext, 
+import {
+    createContext,
+    useContext,
     useState,
     useEffect
 } from "react";
 
+import cartApi from "../api/cartApi";
 
 const CartContext = createContext();
 
-
 export const CartProvider = ({ children }) => {
 
-    const [cart, setCart] = useState(()=>{
+    const [cart, setCart] = useState([]);
 
-    const savedCart = localStorage.getItem("cart");
+    const [loading, setLoading] = useState(true);
 
-    return savedCart 
-        ? JSON.parse(savedCart)
-        : [];
+    useEffect(() => {
 
-    });
-    useEffect(()=>{
+        fetchCart();
 
-        localStorage.setItem(
-            "cart",
-            JSON.stringify(cart)
-        );
+    }, []);
 
-    },[cart]);
+    const fetchCart = async () => {
 
-    const addToCart = (product) => {
+        try {
 
-        const exist = cart.find(
-            item => item.id === product.id
-        );
+            const response = await cartApi.getCart();
 
+            setCart(response.data);
 
-        if(exist){
+        }
+        catch (error) {
 
-            setCart(
-                cart.map(item =>
-                    item.id === product.id
-                    ?
-                    {
-                        ...item,
-                        quantity:item.quantity + 1
-                    }
-                    :
-                    item
-                )
+            console.log("Lỗi lấy giỏ hàng:", error);
+
+        }
+        finally {
+
+            setLoading(false);
+
+        }
+
+    };
+
+    const addToCart = async (product, quantity = 1) => {
+
+        try {
+
+            await cartApi.addToCart({
+
+                productId: product.id,
+
+                quantity
+
+            });
+
+            await fetchCart();
+
+        }
+        catch (error) {
+
+            console.log("Lỗi thêm sản phẩm:", error);
+
+        }
+
+    };
+
+    const removeFromCart = async (id) => {
+
+        try {
+
+            await cartApi.removeItem(id);
+
+            await fetchCart();
+
+        }
+        catch (error) {
+
+            console.log("Lỗi xóa sản phẩm:", error);
+
+        }
+
+    };
+
+    const increaseQuantity = async (id) => {
+
+        const item = cart.find(item => item.id === id);
+
+        if (!item) return;
+
+        try {
+
+            await cartApi.updateQuantity(
+
+                id,
+
+                item.quantity + 1
+
             );
 
-        }
-        else{
+            await fetchCart();
 
-            setCart([
-                ...cart,
-                {
-                    ...product,
-                    quantity:1
-                }
-            ]);
+        }
+        catch (error) {
+
+            console.log("Lỗi cập nhật số lượng:", error);
 
         }
 
     };
 
+    const decreaseQuantity = async (id) => {
 
+        const item = cart.find(item => item.id === id);
 
-    const removeFromCart = (id)=>{
+        if (!item) return;
 
-        setCart(
-            cart.filter(
-                item => item.id !== id
-            )
-        );
+        if (item.quantity <= 1) {
 
-    };
+            removeFromCart(id);
 
+            return;
 
+        }
 
-    const increaseQuantity=(id)=>{
+        try {
 
-        setCart(
-            cart.map(item =>
-                item.id === id
-                ?
-                {
-                    ...item,
-                    quantity:item.quantity+1
-                }
-                :
-                item
-            )
-        );
+            await cartApi.updateQuantity(
 
-    };
+                id,
 
+                item.quantity - 1
 
+            );
 
-    const decreaseQuantity=(id)=>{
+            await fetchCart();
 
-        setCart(
-            cart.map(item =>
-                item.id === id && item.quantity>1
-                ?
-                {
-                    ...item,
-                    quantity:item.quantity-1
-                }
-                :
-                item
-            )
-        );
+        }
+        catch (error) {
+
+            console.log("Lỗi cập nhật số lượng:", error);
+
+        }
 
     };
 
+    const clearCart = async () => {
 
+        try {
+
+            await cartApi.clearCart();
+
+            setCart([]);
+
+        }
+        catch (error) {
+
+            console.log("Lỗi xóa giỏ hàng:", error);
+
+        }
+
+    };
+
+    const totalPrice = cart.reduce(
+
+        (total, item) =>
+
+            total + Number(item.price) * item.quantity,
+
+        0
+
+    );
 
     return (
 
         <CartContext.Provider
 
             value={{
+
                 cart,
+
+                loading,
+
+                totalPrice,
+
                 addToCart,
+
                 removeFromCart,
+
                 increaseQuantity,
+
                 decreaseQuantity,
-                totalPrice
+
+                clearCart,
+
+                fetchCart
+
             }}
+
         >
+
             {children}
+
         </CartContext.Provider>
+
     );
+
 };
 
-export const useCart = ()=>useContext(CartContext);
+export const useCart = () => useContext(CartContext);

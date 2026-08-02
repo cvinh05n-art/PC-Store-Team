@@ -40,16 +40,11 @@ const Login = () => {
 
   const handleSubmit = async(e)=>{
 
-
     e.preventDefault();
-
 
     try{
 
-
         const response = await authApi.login(form);
-
-
 
         const {
 
@@ -59,8 +54,6 @@ const Login = () => {
 
         } = response.data;
 
-
-
         login(
 
             user,
@@ -69,33 +62,23 @@ const Login = () => {
 
         );
 
-
-
         alert(
             "Đăng nhập thành công"
         );
 
-
-
         navigate("/");
-
 
     }
 
-
     catch(error){
 
-
         console.log(error);
-
 
         alert(
             "Đăng nhập thất bại"
         );
 
-
     }
-
 
 };
   const { login } = useAuth();

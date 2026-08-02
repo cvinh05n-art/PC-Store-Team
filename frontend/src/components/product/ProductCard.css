@@ -1,71 +1,206 @@
 .product-card{
+
     background:#fff;
-    border-radius:10px;
+
+    border-radius:15px;
+
     overflow:hidden;
-    box-shadow:0 0 10px rgba(0,0,0,.1);
+
+    box-shadow:0 4px 12px rgba(0,0,0,.1);
+
     transition:.3s;
+
+    display:flex;
+
+    flex-direction:column;
+
 }
 
 .product-card:hover{
-    transform:translateY(-5px);
+
+    transform:translateY(-8px);
+
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+
 }
 
-.product-card img{
+.product-image{
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.product-image img{
+
     width:100%;
-    height:220px;
+
+    height:230px;
+
     object-fit:cover;
+
+    transition:.4s;
+
 }
 
-.product-card h3{
-    padding:15px;
-    font-size:18px;
+.product-card:hover img{
+
+    transform:scale(1.08);
+
+}
+
+.badge{
+
+    position:absolute;
+
+    top:10px;
+
+    left:10px;
+
+    background:#ff3b30;
+
+    color:white;
+
+    padding:5px 12px;
+
+    border-radius:20px;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+}
+
+.product-content{
+
+    padding:18px;
+
+}
+
+.category{
+
+    color:#777;
+
+    font-size:14px;
+
+}
+
+.product-content h3{
+
+    margin:10px 0;
+
+    min-height:50px;
+
+    font-size:19px;
+
+}
+
+.brand{
+
+    color:#666;
+
+    margin-bottom:10px;
+
+}
+
+.rating{
+
+    color:#ff9800;
+
+    margin-bottom:10px;
+
+}
+
+.rating span{
+
+    color:#666;
+
+    margin-left:5px;
+
 }
 
 .price{
+
+    font-size:24px;
+
     color:#e53935;
-    font-size:18px;
+
     font-weight:bold;
-    padding:0 15px;
+
+    margin:15px 0;
+
 }
 
-.product-card button{
-    width:90%;
-    margin:15px;
-    padding:10px;
-    border:none;
-    background:#1976d2;
-    color:white;
-    border-radius:6px;
-    cursor:pointer;
+.stock{
+
+    color:#2e7d32;
+
+    font-weight:600;
+
+    margin-bottom:15px;
+
 }
 
 .product-actions{
 
     display:flex;
 
-    justify-content:center;
+    flex-direction:column;
 
     gap:10px;
-
-    margin-bottom:15px;
 
 }
 
 .product-actions button{
 
-    padding:10px 15px;
+    width:100%;
+
+    border:none;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+    transition:.3s;
+
+}
+
+.detail-btn{
+
+    background:#1976d2;
+
+    color:white;
+
+}
+
+.detail-btn:hover{
+
+    background:#0d47a1;
 
 }
 
 .edit-btn{
 
-    background:#f39c12;
+    background:#ff9800;
+
+    color:white;
+
+}
+
+.edit-btn:hover{
+
+    background:#ef6c00;
 
 }
 
 .delete-btn{
 
-    background:#e53935;
+    background:#d32f2f;
 
     color:white;
 
@@ -73,6 +208,20 @@
 
 .delete-btn:hover{
 
-    background:#c62828;
+    background:#b71c1c;
+
+}
+
+.cart-btn{
+
+    background:#43a047;
+
+    color:white;
+
+}
+
+.cart-btn:hover{
+
+    background:#2e7d32;
 
 }

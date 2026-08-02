@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import "./CategoryForm.css";
 
-
 const CategoryForm = () => {
 
     const navigate = useNavigate();
@@ -17,8 +16,6 @@ const CategoryForm = () => {
 
     });
 
-
-
     const handleChange = (e)=>{
 
         setCategory({
@@ -31,15 +28,11 @@ const CategoryForm = () => {
 
     }
 
-
-
     const handleSubmit = (e)=>{
 
         e.preventDefault();
 
-
         console.log(category);
-
 
         alert(
             id 
@@ -47,17 +40,13 @@ const CategoryForm = () => {
             : "Thêm danh mục thành công"
         );
 
-
         navigate("/admin/categories");
 
     }
 
-
-
     return (
 
         <div className="category-form">
-
 
             <h1>
 
@@ -67,15 +56,11 @@ const CategoryForm = () => {
 
             </h1>
 
-
-
             <form onSubmit={handleSubmit}>
-
 
                 <label>
                     Tên danh mục
                 </label>
-
 
                 <input
 
@@ -91,8 +76,6 @@ const CategoryForm = () => {
 
                 />
 
-
-
                 <button type="submit">
 
                     {id 
@@ -101,15 +84,12 @@ const CategoryForm = () => {
 
                 </button>
 
-
             </form>
-
 
         </div>
 
     );
 
 }
-
 
 export default CategoryForm;

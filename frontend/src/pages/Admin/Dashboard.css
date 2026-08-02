@@ -2,58 +2,100 @@
 
     padding:40px;
 
+    background:#f5f6fa;
+
+    min-height:100vh;
+
 }
-
-
 
 .dashboard h1{
 
-    margin-bottom:30px;
+    margin-bottom:35px;
 
 }
 
-
-
-.dashboard-grid{
+.dashboard-cards{
 
     display:grid;
 
-    grid-template-columns:
+    grid-template-columns:repeat(4,1fr);
 
-    repeat(4,1fr);
+    gap:25px;
+
+    margin-bottom:40px;
+
+}
+
+.card{
+
+    background:white;
+
+    border-radius:10px;
+
+    padding:25px;
+
+    text-align:center;
+
+    box-shadow:0 3px 8px rgba(0,0,0,.1);
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-6px);
+
+}
+
+.card h2{
+
+    font-size:45px;
+
+}
+
+.card h3{
+
+    font-size:32px;
+
+    color:#1976d2;
+
+    margin:10px 0;
+
+}
+
+.dashboard-menu{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
 
     gap:20px;
 
 }
 
+.dashboard-menu button{
 
+    width:100%;
 
-.stat-card{
+    padding:18px;
 
-    background:white;
+    border:none;
 
-    padding:25px;
+    border-radius:8px;
 
-    border-radius:10px;
+    background:#1976d2;
 
-    box-shadow:0 0 10px #ddd;
+    color:white;
 
-}
-
-
-
-.stat-card h3{
+    cursor:pointer;
 
     font-size:18px;
 
 }
 
+.dashboard-menu button:hover{
 
-
-.stat-card p{
-
-    font-size:30px;
-
-    font-weight:bold;
+    background:#0d47a1;
 
 }

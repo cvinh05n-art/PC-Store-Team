@@ -112,8 +112,9 @@ const [loading,setLoading] = useState(true);
                         {quantity}
                     </span>
                     <button
-                        onClick={()=>
-                            setQuantity(quantity+1)
+                        onClick={() =>
+                            quantity < product.stock &&
+                            setQuantity(quantity + 1)
                         }
                     >
                         +

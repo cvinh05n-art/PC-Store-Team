@@ -5,7 +5,6 @@ import BrandTable from "../../components/brand/BrandTable";
 
 import "./BrandList.css";
 
-
 const initialBrands=[
 
     {
@@ -30,17 +29,11 @@ const initialBrands=[
 
 ];
 
-
-
 const BrandList =()=>{
-
 
     const [brands,setBrands]=useState(initialBrands);
 
-
-
     const handleDelete=(id)=>{
-
 
         const confirmDelete =
             window.confirm(
@@ -51,8 +44,6 @@ const BrandList =()=>{
         if(!confirmDelete)
             return;
 
-
-
         setBrands(
 
             brands.filter(
@@ -61,25 +52,17 @@ const BrandList =()=>{
 
         );
 
-
     }
-
-
 
     return(
 
-
         <div className="brand-list">
-
 
             <h1>
                 Quản lý thương hiệu
             </h1>
 
-
-
             <Link to="/admin/brands/create">
-
 
                 <button className="add-btn">
 
@@ -87,10 +70,7 @@ const BrandList =()=>{
 
                 </button>
 
-
             </Link>
-
-
 
             <BrandTable
 
@@ -100,14 +80,10 @@ const BrandList =()=>{
 
             />
 
-
         </div>
-
 
     );
 
 }
-
-
 
 export default BrandList;

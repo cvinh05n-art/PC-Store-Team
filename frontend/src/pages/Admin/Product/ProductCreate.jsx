@@ -5,13 +5,9 @@ import productApi from "../../../api/productApi";
 
 import "./ProductCreate.css";
 
-
 const ProductCreate = () => {
 
-
     const navigate = useNavigate();
-
-
 
     const [product,setProduct] = useState({
 
@@ -29,10 +25,7 @@ const ProductCreate = () => {
 
     });
 
-
-
     const handleChange = (e)=>{
-
 
         setProduct({
 
@@ -41,7 +34,6 @@ const ProductCreate = () => {
             [e.target.name]:e.target.value
 
         });
-
 
     };
     
@@ -80,22 +72,17 @@ const ProductCreate = () => {
 
         <div className="product-create">
 
-
             <h1>
 
                 Thêm sản phẩm
 
             </h1>
 
-
-
             <form onSubmit={handleSubmit}>
-
 
                 <label>
                     Tên sản phẩm
                 </label>
-
 
                 <input
 
@@ -109,12 +96,9 @@ const ProductCreate = () => {
 
                 />
 
-
-
                 <label>
                     Giá
                 </label>
-
 
                 <input
 
@@ -130,12 +114,9 @@ const ProductCreate = () => {
 
                 />
 
-
-
                 <label>
                     Danh mục
                 </label>
-
 
                 <select
 
@@ -151,31 +132,23 @@ const ProductCreate = () => {
                         Chọn danh mục
                     </option>
 
-
                     <option value="CPU">
                         CPU
                     </option>
-
 
                     <option value="GPU">
                         GPU
                     </option>
 
-
                     <option value="RAM">
                         RAM
                     </option>
 
-
                 </select>
-
-
-
 
                 <label>
                     Thương hiệu
                 </label>
-
 
                 <select
 
@@ -191,30 +164,23 @@ const ProductCreate = () => {
                         Chọn thương hiệu
                     </option>
 
-
                     <option value="Intel">
                         Intel
                     </option>
-
 
                     <option value="AMD">
                         AMD
                     </option>
 
-
                     <option value="NVIDIA">
                         NVIDIA
                     </option>
 
-
                 </select>
-
-
 
                 <label>
                     Link hình ảnh
                 </label>
-
 
                 <input
 
@@ -228,12 +194,9 @@ const ProductCreate = () => {
 
                 />
 
-
-
                 <label>
                     Mô tả
                 </label>
-
 
                 <textarea
 
@@ -245,23 +208,18 @@ const ProductCreate = () => {
 
                 />
 
-
-
                 <button type="submit">
 
                     Lưu sản phẩm
 
                 </button>
 
-
             </form>
-
 
         </div>
 
     );
 
 };
-
 
 export default ProductCreate;

@@ -1,9 +1,23 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useCart } from "../../contexts/CartContext";
 import { useAuth } from "../../contexts/AuthContext";
+import "./Navbar.css";
 
 const Navbar = () => {
 
-    const { user, isAuthenticated, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const { user, logout, isAuthenticated } = useAuth();
+
+    const { cart } = useCart();
+
+    const handleLogout = () => {
+
+        logout();
+
+        navigate("/login");
+
+    };
 
     return (
 
@@ -11,63 +25,132 @@ const Navbar = () => {
 
             <div className="logo">
 
-                <Link to="/">Computer Store</Link>
+                <Link to="/">
+
+                    PC STORE
+
+                </Link>
 
             </div>
 
             <div className="menu">
 
-                <Link to="/">Trang chủ</Link>
+                <Link to="/">
 
-                <Link to="/products">Sản phẩm</Link>
+                    Trang chủ
 
-                <Link to="/cart">Giỏ hàng</Link>
+                </Link>
 
-                <Link to="/profile">Hồ sơ</Link>
+                <Link to="/products">
 
-                <Link to="/change-password">Đổi mật khẩu</Link>
+                    Sản phẩm
+
+                </Link>
+
+                <Link to="/cart">
+
+                    🛒 Giỏ hàng
+
+                    {
+
+                        cart.length > 0 &&
+
+                        (
+
+                            <span className="cart-count">
+
+                                {cart.length}
+
+                            </span>
+
+                        )
+
+                    }
+
+                </Link>
 
             </div>
 
-            <div className="user-info">
+            <div className="account">
 
-                {
+            {
 
-                    isAuthenticated ? (
+                isAuthenticated
 
-                        <>
+                ?
 
-                           <Link to="/profile">
+                <>
 
-                                Xin chào
+                    <Link to="/profile">
 
-                                <strong> {user?.fullName}</strong>
+                        👤
+
+                        {
+
+                            user?.fullName
+
+                            ?
+
+                            user.fullName
+
+                            :
+
+                            "Tài khoản"
+
+                        }
+
+                    </Link>
+
+                    {
+
+                        user?.role === "ADMIN"
+
+                        &&
+
+                        (
+
+                            <Link to="/admin">
+
+                                Admin
 
                             </Link>
 
-                            <button onClick={logout}>
+                        )
 
-                                Đăng xuất
+                    }
 
-                            </button>
+                    <button
 
-                        </>
+                        onClick={handleLogout}
 
-                    ) : (
+                    >
 
-                        <>
+                        Đăng xuất
 
-                            <Link to="/login">
+                    </button>
 
-                                Đăng nhập
+                </>
 
-                            </Link>
+                :
 
-                        </>
+                <>
 
-                    )
+                    <Link to="/login">
 
-                }
+                        Đăng nhập
+
+                    </Link>
+
+
+                    <Link to="/register">
+
+                        Đăng ký
+
+                    </Link>
+
+
+                </>
+            }
 
             </div>
 
