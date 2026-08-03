@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useCart } from "../../context/CartContext";
+import { useCart } from "../../contexts/CartContext";
 import productApi from "../../api/productApi";
 import "./ProductDetail.css";
 const ProductDetail = () => {
