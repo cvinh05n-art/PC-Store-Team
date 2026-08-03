@@ -1,19 +1,15 @@
 import AppRoutes from "./routes/AppRoutes";
-
-import { CartProvider } from "./context/CartContext";
+import { AuthProvider } from "./contexts/AuthContext";
+import { CartProvider } from "./contexts/CartContext";
 
 function App() {
-
     return (
-
-        <CartProvider>
-
-            <AppRoutes />
-
-        </CartProvider>
-
+        <AuthProvider>
+            <CartProvider>
+                <AppRoutes />
+            </CartProvider>
+        </AuthProvider>
     );
-
 }
 
 export default App;

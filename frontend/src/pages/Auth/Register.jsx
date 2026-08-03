@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import authService from "../../services/auth.service";
+import authApi from "../../api/authApi";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ const Register = () => {
         password: formData.password,
       };
 
-      await authService.register(payload);
+      await authApi.register(payload);
 
       alert("Đăng ký thành công");
 
