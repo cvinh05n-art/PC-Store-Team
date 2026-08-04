@@ -10,52 +10,60 @@ const Checkout = () => {
 
     const {
         cart,
-        clearCart
+        clearCart,
+        totalPrice
     } = useCart();
 
     const [customer, setCustomer] = useState({
-
         name: "",
-
         phone: "",
-
         address: ""
-
     });
+
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
 
         setCustomer({
-
             ...customer,
-
             [e.target.name]: e.target.value
-
         });
 
     };
 
-    const total = cart.reduce(
+    const validateForm = () => {
 
-        (sum, item) =>
+        if (!customer.name.trim()) {
+            alert("Vui lòng nhập họ tên.");
+            return false;
+        }
 
-            sum + item.price * item.quantity,
+        if (!/^0\d{9}$/.test(customer.phone)) {
+            alert("Số điện thoại không hợp lệ.");
+            return false;
+        }
 
-        0
+        if (!customer.address.trim()) {
+            alert("Vui lòng nhập địa chỉ.");
+            return false;
+        }
 
-    );
+        if (cart.length === 0) {
+            alert("Giỏ hàng đang trống.");
+            return false;
+        }
+
+        return true;
+
+    };
 
     const handleSubmit = async (e) => {
 
         e.preventDefault();
 
-        if (cart.length === 0) {
+        if (!validateForm()) return;
 
-            alert("Giỏ hàng đang trống");
-
-            return;
-
-        }
+        setLoading(true);
 
         const order = {
 
@@ -63,9 +71,11 @@ const Checkout = () => {
 
             products: cart,
 
-            total,
+            total: totalPrice,
 
-            status: "Đang xử lý"
+            status: "Đang xử lý",
+
+            createdAt: new Date()
 
         };
 
@@ -75,16 +85,27 @@ const Checkout = () => {
 
             await clearCart();
 
-            alert("Đặt hàng thành công");
+            setCustomer({
+                name: "",
+                phone: "",
+                address: ""
+            });
+
+            alert("🎉 Đặt hàng thành công!");
 
             navigate("/orders");
 
         }
         catch (error) {
 
-            console.log("Lỗi tạo đơn hàng:", error);
+            console.error("Lỗi tạo đơn hàng:", error);
 
-            alert("Đặt hàng thất bại");
+            alert("Đặt hàng thất bại. Vui lòng thử lại.");
+
+        }
+        finally {
+
+            setLoading(false);
 
         }
 
@@ -101,21 +122,21 @@ const Checkout = () => {
                 <label>Họ tên</label>
 
                 <input
+                    type="text"
                     name="name"
                     value={customer.name}
                     onChange={handleChange}
                     placeholder="Nhập họ tên"
-                    required
                 />
 
                 <label>Số điện thoại</label>
 
                 <input
+                    type="tel"
                     name="phone"
                     value={customer.phone}
                     onChange={handleChange}
                     placeholder="Nhập số điện thoại"
-                    required
                 />
 
                 <label>Địa chỉ</label>
@@ -125,18 +146,26 @@ const Checkout = () => {
                     value={customer.address}
                     onChange={handleChange}
                     placeholder="Nhập địa chỉ"
-                    required
                 />
 
-                <h2>
+                <div className="checkout-summary">
 
-                    Tổng tiền: {Number(total).toLocaleString()} đ
+                    <h2>
+                        Tổng tiền:
+                        {" "}
+                        {Number(totalPrice).toLocaleString("vi-VN")} đ
+                    </h2>
 
-                </h2>
+                </div>
 
-                <button type="submit">
+                <button
+                    type="submit"
+                    disabled={loading}
+                >
 
-                    Xác nhận đặt hàng
+                    {loading
+                        ? "Đang xử lý..."
+                        : "Xác nhận đặt hàng"}
 
                 </button>
 

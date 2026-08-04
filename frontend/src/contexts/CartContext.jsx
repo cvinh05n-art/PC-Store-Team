@@ -2,7 +2,9 @@ import {
     createContext,
     useContext,
     useState,
-    useEffect
+    useEffect,
+    useMemo,
+    useCallback
 } from "react";
 
 import cartApi from "../api/cartApi";
@@ -12,38 +14,46 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
 
     const [cart, setCart] = useState([]);
-
     const [loading, setLoading] = useState(true);
+    const [processing, setProcessing] = useState(false);
 
-    useEffect(() => {
+    const fetchCart = useCallback(async (showLoading = true) => {
 
-        fetchCart();
-
-    }, []);
-
-    const fetchCart = async () => {
+        if (showLoading) {
+            setLoading(true);
+        }
 
         try {
 
             const response = await cartApi.getCart();
 
-            setCart(response.data);
+            setCart(response.data || []);
 
         }
         catch (error) {
 
-            console.log("Lỗi lấy giỏ hàng:", error);
+            console.error("Lỗi lấy giỏ hàng:", error);
 
         }
         finally {
 
-            setLoading(false);
+            if (showLoading) {
+                setLoading(false);
+            }
 
         }
 
-    };
+    }, []);
 
-    const addToCart = async (product, quantity = 1) => {
+    useEffect(() => {
+
+        fetchCart();
+
+    }, [fetchCart]);
+
+    const addToCart = useCallback(async (product, quantity = 1) => {
+
+        setProcessing(true);
 
         try {
 
@@ -55,39 +65,55 @@ export const CartProvider = ({ children }) => {
 
             });
 
-            await fetchCart();
+            await fetchCart(false);
 
         }
         catch (error) {
 
-            console.log("Lỗi thêm sản phẩm:", error);
+            console.error("Lỗi thêm sản phẩm:", error);
+            throw error;
+
+        }
+        finally {
+
+            setProcessing(false);
 
         }
 
-    };
+    }, [fetchCart]);
 
-    const removeFromCart = async (id) => {
+    const removeFromCart = useCallback(async (id) => {
+
+        setProcessing(true);
 
         try {
 
             await cartApi.removeItem(id);
 
-            await fetchCart();
+            await fetchCart(false);
 
         }
         catch (error) {
 
-            console.log("Lỗi xóa sản phẩm:", error);
+            console.error("Lỗi xóa sản phẩm:", error);
+            throw error;
+
+        }
+        finally {
+
+            setProcessing(false);
 
         }
 
-    };
+    }, [fetchCart]);
 
-    const increaseQuantity = async (id) => {
+    const increaseQuantity = useCallback(async (id) => {
 
         const item = cart.find(item => item.id === id);
 
         if (!item) return;
+
+        setProcessing(true);
 
         try {
 
@@ -99,18 +125,24 @@ export const CartProvider = ({ children }) => {
 
             );
 
-            await fetchCart();
+            await fetchCart(false);
 
         }
         catch (error) {
 
-            console.log("Lỗi cập nhật số lượng:", error);
+            console.error("Lỗi cập nhật số lượng:", error);
+            throw error;
+
+        }
+        finally {
+
+            setProcessing(false);
 
         }
 
-    };
+    }, [cart, fetchCart]);
 
-    const decreaseQuantity = async (id) => {
+    const decreaseQuantity = useCallback(async (id) => {
 
         const item = cart.find(item => item.id === id);
 
@@ -118,11 +150,13 @@ export const CartProvider = ({ children }) => {
 
         if (item.quantity <= 1) {
 
-            removeFromCart(id);
+            await removeFromCart(id);
 
             return;
 
         }
+
+        setProcessing(true);
 
         try {
 
@@ -134,18 +168,26 @@ export const CartProvider = ({ children }) => {
 
             );
 
-            await fetchCart();
+            await fetchCart(false);
 
         }
         catch (error) {
 
-            console.log("Lỗi cập nhật số lượng:", error);
+            console.error("Lỗi cập nhật số lượng:", error);
+            throw error;
+
+        }
+        finally {
+
+            setProcessing(false);
 
         }
 
-    };
+    }, [cart, fetchCart, removeFromCart]);
 
-    const clearCart = async () => {
+    const clearCart = useCallback(async () => {
+
+        setProcessing(true);
 
         try {
 
@@ -156,21 +198,45 @@ export const CartProvider = ({ children }) => {
         }
         catch (error) {
 
-            console.log("Lỗi xóa giỏ hàng:", error);
+            console.error("Lỗi xóa giỏ hàng:", error);
+            throw error;
+
+        }
+        finally {
+
+            setProcessing(false);
 
         }
 
-    };
+    }, []);
 
-    const totalPrice = cart.reduce(
+    const totalPrice = useMemo(() => {
 
-        (total, item) =>
+        return cart.reduce(
 
-            total + Number(item.price) * item.quantity,
+            (total, item) =>
 
-        0
+                total + Number(item.price) * item.quantity,
 
-    );
+            0
+
+        );
+
+    }, [cart]);
+
+    const itemCount = useMemo(() => {
+
+        return cart.reduce(
+
+            (total, item) =>
+
+                total + item.quantity,
+
+            0
+
+        );
+
+    }, [cart]);
 
     return (
 
@@ -182,7 +248,11 @@ export const CartProvider = ({ children }) => {
 
                 loading,
 
+                processing,
+
                 totalPrice,
+
+                itemCount,
 
                 addToCart,
 

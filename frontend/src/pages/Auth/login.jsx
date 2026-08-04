@@ -1,150 +1,123 @@
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
-import authService from '../../services/auth.service';
-
-import Input from '../../components/common/Input';
-import Button from '../../components/common/Button';
-import Toast from '../../components/common/Toast';
-
-import authApi from "../../api/authApi";
 import { useAuth } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import authApi from "../../api/authApi";
 
-import '../../components/common/Toast.css';
+import Input from "../../components/common/Input";
+import Button from "../../components/common/Button";
+
+import "../../components/common/Toast.css";
 
 const Login = () => {
-  const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+    const { login } = useAuth();
 
-  const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+    const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async(e)=>{
-
-    e.preventDefault();
-
-    try{
-
-        const response = await authApi.login(form);
-
-        const {
-
-            user,
-
-            token
-
-        } = response.data;
-
-        login(
-
-            user,
-
-            token
-
-        );
-
-        alert(
-            "Đăng nhập thành công"
-        );
-
-        navigate("/");
-
-    }
-
-    catch(error){
-
-        console.log(error);
-
-        alert(
-            "Đăng nhập thất bại"
-        );
-
-    }
-
-};
-  const { login } = useAuth();
-
-  const navigate = useNavigate();
-
-  const [form,setForm] = useState({
-
-    email:"",
-
-    password:""
-
-});
-const handleChange = (e)=>{
-
-    setForm({
-
-        ...form,
-
-        [e.target.name]:e.target.value
-
+    const [formData, setFormData] = useState({
+        email: "",
+        password: ""
     });
 
-};
-  return (
-    <div className="login-page">
-      <div className="login-card">
-        <h1>Đăng nhập</h1>
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
 
-        <form onSubmit={handleSubmit}>
+    const handleSubmit = async (e) => {
 
-          <div className="form-group">
-            <label>Email</label>
+        e.preventDefault();
 
-            <Input
-                label="Email"
-                type="email"
-                name="email"
-                value={formData.email}
-                placeholder="Nhập email"
-                onChange={handleChange}
-            />
+        setLoading(true);
 
-            <Input
-                label="Mật khẩu"
-                type="password"
-                name="password"
-                value={formData.password}
-                placeholder="Nhập mật khẩu"
-                onChange={handleChange}
-            />
+        try {
 
-          </div>
+            const response = await authApi.login(formData);
 
-          <Button
-                type="submit"
-                text="Đăng nhập"
-                loading={loading}
-            />
-          <p className="forgot-password">
+            const { user, token } = response.data;
 
-            <Link to="/forgot-password">Quên mật khẩu?</Link>
+            login(user, token);
 
-          </p>
-          
-        </form>
+            alert("Đăng nhập thành công");
 
-        <p>
-          Chưa có tài khoản?{" "}
-          <Link to="/register">Đăng ký ngay</Link>
-        </p>
-      </div>
-    </div>
-  );
+            navigate("/");
+
+        }
+        catch (error) {
+
+            console.log(error);
+
+            alert("Đăng nhập thất bại");
+
+        }
+        finally {
+
+            setLoading(false);
+
+        }
+
+    };
+
+    return (
+
+        <div className="login-page">
+
+            <div className="login-card">
+
+                <h1>Đăng nhập</h1>
+
+                <form onSubmit={handleSubmit}>
+
+                    <Input
+                        label="Email"
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        placeholder="Nhập email"
+                        onChange={handleChange}
+                    />
+
+                    <Input
+                        label="Mật khẩu"
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        placeholder="Nhập mật khẩu"
+                        onChange={handleChange}
+                    />
+
+                    <Button
+                        type="submit"
+                        text="Đăng nhập"
+                        loading={loading}
+                    />
+
+                    <p className="forgot-password">
+                        <Link to="/forgot-password">
+                            Quên mật khẩu?
+                        </Link>
+                    </p>
+
+                </form>
+
+                <p>
+                    Chưa có tài khoản?{" "}
+                    <Link to="/register">
+                        Đăng ký ngay
+                    </Link>
+                </p>
+
+            </div>
+
+        </div>
+
+    );
+
 };
 
 export default Login;

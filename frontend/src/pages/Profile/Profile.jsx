@@ -3,7 +3,7 @@ import Navbar from "../../components/layout/Navbar";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
 import { useAuth } from "../../contexts/AuthContext";
-import AvatarUpload from "../../components/profile/AvatarUpload";
+import AvatarUpload from "./AvatarUpload";
 import { updateProfile } from "../../services/userService";
 
 const Profile = () => {
