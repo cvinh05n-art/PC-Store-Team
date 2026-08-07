@@ -1,0 +1,20 @@
+.auth-container {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.auth-form input {
+    padding: 10px;
+}
+
+.auth-form button {
+    padding: 10px;
+    cursor: pointer;
+}

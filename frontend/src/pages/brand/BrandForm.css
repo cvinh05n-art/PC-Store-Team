@@ -1,0 +1,65 @@
+.brand-form{
+
+    width:500px;
+
+    margin:50px auto;
+
+    padding:30px;
+
+    background:white;
+
+    border-radius:10px;
+
+    box-shadow:0 0 10px rgba(0,0,0,.1);
+
+}
+
+.brand-form h1{
+
+    margin-bottom:30px;
+
+}
+
+.brand-form form{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.brand-form label{
+
+    margin-bottom:10px;
+
+    font-weight:bold;
+
+}
+
+.brand-form input{
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    border-radius:6px;
+
+    margin-bottom:20px;
+
+}
+
+.brand-form button{
+
+    padding:12px;
+
+    background:#1976d2;
+
+    color:white;
+
+    border:none;
+
+    border-radius:6px;
+
+    cursor:pointer;
+
+}

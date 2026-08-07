@@ -1,19 +1,27 @@
-const authorizeRoles = (...allowedRoles) => {
-    return (req, res, next) => {
-        if (!req.user) {
-            return res.status(401).json({
-                message: "Bạn chưa đăng nhập"
-            });
-        }
+const authorize = (...allowedRoles) => {
+  const normalizedRoles = allowedRoles.map((role) =>
+    role.toLowerCase()
+  );
 
-        if (!allowedRoles.includes(req.user.role)) {
-            return res.status(403).json({
-                message: "Bạn không có quyền truy cập"
-            });
-        }
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Bạn chưa đăng nhập"
+      });
+    }
 
-        next();
-    };
+    const userRole = String(req.user.role || "").toLowerCase();
+
+    if (!normalizedRoles.includes(userRole)) {
+      return res.status(403).json({
+        success: false,
+        message: "Bạn không có quyền thực hiện chức năng này"
+      });
+    }
+
+    next();
+  };
 };
 
-module.exports = authorizeRoles;
+module.exports = authorize;

@@ -1,108 +1,52 @@
-const db = require("../config/database");
 
-const Product = {
-    async getAll() {
-        const [rows] = await db.query(`
-            SELECT 
-                p.*,
-                c.name AS category_name,
-                b.name AS brand_name
-            FROM products p
-            LEFT JOIN categories c ON p.category_id = c.id
-            LEFT JOIN brands b ON p.brand_id = b.id
-            ORDER BY p.id DESC
-        `);
+const mongoose = require("mongoose");
 
-        return rows;
+const productSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true
     },
-
-    async getById(id) {
-        const [rows] = await db.query(`
-            SELECT 
-                p.*,
-                c.name AS category_name,
-                b.name AS brand_name
-            FROM products p
-            LEFT JOIN categories c ON p.category_id = c.id
-            LEFT JOIN brands b ON p.brand_id = b.id
-            WHERE p.id = ?
-        `, [id]);
-
-        return rows[0];
+    price: {
+      type: Number,
+      required: true,
+      min: 0
     },
-
-    async create(product) {
-        const {
-            name,
-            description,
-            price,
-            quantity,
-            image,
-            category_id,
-            brand_id
-        } = product;
-
-        const [result] = await db.query(`
-            INSERT INTO products
-            (name, description, price, quantity, image, category_id, brand_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        `, [
-            name,
-            description,
-            price,
-            quantity,
-            image,
-            category_id,
-            brand_id
-        ]);
-
-        return result.insertId;
+    stock: {
+      type: Number,
+      required: true,
+      min: 0,
+      default: 0
     },
-
-    async update(id, product) {
-        const {
-            name,
-            description,
-            price,
-            quantity,
-            image,
-            category_id,
-            brand_id
-        } = product;
-
-        const [result] = await db.query(`
-            UPDATE products
-            SET
-                name = ?,
-                description = ?,
-                price = ?,
-                quantity = ?,
-                image = ?,
-                category_id = ?,
-                brand_id = ?
-            WHERE id = ?
-        `, [
-            name,
-            description,
-            price,
-            quantity,
-            image,
-            category_id,
-            brand_id,
-            id
-        ]);
-
-        return result.affectedRows;
+    image: {
+      type: String,
+      default: ""
     },
-
-    async delete(id) {
-        const [result] = await db.query(
-            "DELETE FROM products WHERE id = ?",
-            [id]
-        );
-
-        return result.affectedRows;
+    description: {
+      type: String,
+      default: "",
+      trim: true
+    },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      default: null
+    },
+    brand: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
+      default: null
+    },
+    status: {
+      type: Boolean,
+      default: true
     }
-};
+  },
+  {
+    timestamps: true
+  }
+);
 
-module.exports = Product;
+module.exports = mongoose.model("Product", productSchema);
+

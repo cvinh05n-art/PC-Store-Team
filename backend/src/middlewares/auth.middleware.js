@@ -1,37 +1,42 @@
 const jwt = require("jsonwebtoken");
 
-const authenticateToken = (req, res, next) => {
-    try {
-        const authHeader = req.headers.authorization;
+const auth = (req, res, next) => {
+  try {
+    const authorization = req.headers.authorization;
 
-        if (!authHeader) {
-            return res.status(401).json({
-                message: "Bạn chưa đăng nhập"
-            });
-        }
-
-        const token = authHeader.split(" ")[1];
-
-        if (!token) {
-            return res.status(401).json({
-                message: "Token không hợp lệ"
-            });
-        }
-
-        const decoded = jwt.verify(
-            token,
-            process.env.JWT_SECRET
-        );
-
-        req.user = decoded;
-
-        next();
-
-    } catch (error) {
-        return res.status(401).json({
-            message: "Token không hợp lệ hoặc đã hết hạn"
-        });
+    if (!authorization || !authorization.startsWith("Bearer ")) {
+      return res.status(401).json({
+        success: false,
+        message: "Bạn chưa đăng nhập"
+      });
     }
+
+    const token = authorization.split(" ")[1];
+
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "secret_key"
+    );
+
+    req.user = {
+      ...decoded,
+      id: decoded.id || decoded.userId || decoded.sub
+    };
+
+    if (!req.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Token không chứa thông tin người dùng"
+      });
+    }
+
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: "Token không hợp lệ hoặc đã hết hạn"
+    });
+  }
 };
 
-module.exports = authenticateToken;
+module.exports = auth;

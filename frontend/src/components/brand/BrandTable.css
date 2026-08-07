@@ -1,0 +1,42 @@
+.brand-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.brand-table th,
+.brand-table td{
+
+    border:1px solid #ddd;
+
+    padding:12px;
+
+}
+
+.brand-table th{
+
+    background:#1976d2;
+
+    color:white;
+
+}
+
+.edit-btn{
+
+    background:#f39c12;
+
+    color:white;
+
+    margin-right:10px;
+
+}
+
+.delete-btn{
+
+    background:#e53935;
+
+    color:white;
+
+}

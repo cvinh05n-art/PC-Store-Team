@@ -1,24 +1,38 @@
-const db = require("../config/database");
+const mongoose = require("mongoose");
 
-const User = {
-    async findByEmail(email) {
-        const [rows] = await db.execute(
-            "SELECT * FROM users WHERE email = ?",
-            [email]
-        );
-
-        return rows[0];
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true
     },
-
-    async create(fullName, email, password) {
-        const [result] = await db.execute(
-            `INSERT INTO users (full_name, email, password)
-             VALUES (?, ?, ?)`,
-            [fullName, email, password]
-        );
-
-        return result.insertId;
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true
+    },
+    password: {
+      type: String,
+      required: true,
+      select: false
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin", "USER", "ADMIN"],
+      default: "user"
+    },
+    status: {
+      type: Boolean,
+      default: true
     }
-};
+  },
+  {
+    timestamps: true
+  }
+);
 
-module.exports = User;
+module.exports = mongoose.model("User", userSchema);
+
