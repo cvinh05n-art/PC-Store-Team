@@ -1,5 +1,7 @@
 const authorize = (...allowedRoles) => {
-  const normalizedRoles = allowedRoles.map((role) => role.toLowerCase());
+  const normalizedRoles = allowedRoles.map((role) =>
+    role.toLowerCase()
+  );
 
   return (req, res, next) => {
     if (!req.user) {

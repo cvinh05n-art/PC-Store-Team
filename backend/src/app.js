@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config();
 
 const app = express();
 
@@ -8,13 +7,15 @@ const categoryRoutes = require("./routes/category.route");
 const brandRoutes = require("./routes/brand.route");
 const orderRoutes = require("./routes/order.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
+const authRoutes = require("./routes/auth.routes");
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Test API
+app.use("/api/auth", authRoutes);
+
 app.get("/", (req, res) => {
     res.json({
         success: true,
