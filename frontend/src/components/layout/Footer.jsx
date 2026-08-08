@@ -1,63 +1,99 @@
+import { Link } from "react-router-dom";
 import "./Footer.css";
 
 const Footer = () => {
+
     return (
+
         <footer className="footer">
 
             <div className="footer-container">
 
-                <div className="footer-section">
+                <div className="footer-column">
 
-                    <h2>Computer Store</h2>
+                    <div className="footer-logo">
+
+                        <div className="logo-icon">
+                            PC
+                        </div>
+
+                        <strong>
+                            PC STORE
+                        </strong>
+
+                    </div>
 
                     <p>
-                        Chuyên cung cấp linh kiện và phụ kiện máy tính
-                        chính hãng.
+                        Cửa hàng máy tính và linh kiện
+                        công nghệ chất lượng cao.
                     </p>
 
                 </div>
 
-                <div className="footer-section">
+                <div className="footer-column">
 
                     <h3>Liên kết</h3>
 
-                    <ul>
+                    <Link to="/">
+                        Trang chủ
+                    </Link>
 
-                        <li>Trang chủ</li>
+                    <Link to="/products">
+                        Sản phẩm
+                    </Link>
 
-                        <li>Sản phẩm</li>
-
-                        <li>Giỏ hàng</li>
-
-                        <li>Liên hệ</li>
-
-                    </ul>
+                    <Link to="/cart">
+                        Giỏ hàng
+                    </Link>
 
                 </div>
 
-                <div className="footer-section">
+                <div className="footer-column">
+
+                    <h3>Hỗ trợ</h3>
+
+                    <a href="#contact">
+                        Liên hệ
+                    </a>
+
+                    <a href="#policy">
+                        Chính sách
+                    </a>
+
+                    <a href="#shipping">
+                        Chính sách giao hàng
+                    </a>
+
+                </div>
+
+                <div className="footer-column">
 
                     <h3>Thông tin</h3>
 
-                    <p>Email: support@computerstore.com</p>
+                    <p>
+                        📍 Trà Vinh, Việt Nam
+                    </p>
 
-                    <p>Hotline: 0123 456 789</p>
+                    <p>
+                        ☎ 0123 456 789
+                    </p>
 
-                    <p>Địa chỉ: Trà Vinh</p>
+                    <p>
+                        ✉ support@pcstore.com
+                    </p>
 
                 </div>
 
             </div>
 
-            <hr />
+            <div className="footer-bottom">
 
-            <p className="copyright">
+                © 2026 PC STORE. All rights reserved.
 
-                © 2026 Computer Store. All rights reserved.
-
-            </p>
+            </div>
 
         </footer>
+
     );
 };
 
