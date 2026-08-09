@@ -1,74 +1,109 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+    createContext,
+    useContext,
+    useEffect,
+    useState
+} from "react";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-  const [loading, setLoading] = useState(true);
+    useEffect(() => {
 
-  useEffect(() => {
+        const token = localStorage.getItem("token");
+        const userData = localStorage.getItem("user");
 
-    const token = localStorage.getItem("token");
+        if (token && userData) {
 
-    const userData = localStorage.getItem("user");
+            try {
 
-    if (token && userData) {
+                const parsedUser = JSON.parse(userData);
 
-      setUser(JSON.parse(userData));
+                setUser(parsedUser);
+                setIsAuthenticated(true);
 
-      setIsAuthenticated(true);
+            } catch (error) {
 
-    }
+                console.error(
+                    "Lỗi đọc thông tin user:",
+                    error
+                );
 
-    setLoading(false);
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
 
-  }, []);
+            }
 
-  const login = (userData, token) => {
+        }
 
-    localStorage.setItem("token", token);
+        setLoading(false);
 
-    localStorage.setItem("user", JSON.stringify(userData));
+    }, []);
 
-    setUser(userData);
+    const login = (userData, token) => {
 
-    setIsAuthenticated(true);
+        console.log("LOGIN USER:", userData);
+        console.log("LOGIN TOKEN:", token);
 
-  };
+        if (!token) {
 
-  const logout = () => {
+            console.error(
+                "Không nhận được token!"
+            );
 
-    localStorage.removeItem("token");
+            return false;
+        }
 
-    localStorage.removeItem("user");
+        localStorage.setItem(
+            "token",
+            token
+        );
 
-    setUser(null);
+        localStorage.setItem(
+            "user",
+            JSON.stringify(userData)
+        );
 
-    setIsAuthenticated(false);
+        setUser(userData);
+        setIsAuthenticated(true);
 
-  };
+        return true;
+    };
 
-  return (
+    const logout = () => {
 
-    <AuthContext.Provider
-      value={{
-        user,
-        loading,
-        login,
-        logout,
-        isAuthenticated,
-      }}
-    >
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
 
-      {children}
+        setUser(null);
+        setIsAuthenticated(false);
 
-    </AuthContext.Provider>
+    };
 
-  );
+    return (
+
+        <AuthContext.Provider
+            value={{
+                user,
+                loading,
+                login,
+                logout,
+                isAuthenticated
+            }}
+        >
+
+            {children}
+
+        </AuthContext.Provider>
+
+    );
 
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () =>
+    useContext(AuthContext);

@@ -222,6 +222,10 @@ const AppRoutes = () => {
                     }
                 />
 
+                <Route
+                    path="/brands"
+                    element={<BrandList />}
+                />
 
                 {/* CATEGORY */}
 

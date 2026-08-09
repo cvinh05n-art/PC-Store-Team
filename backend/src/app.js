@@ -9,12 +9,20 @@ const orderRoutes = require("./routes/order.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 const authRoutes = require("./routes/auth.routes");
 
+const cartRoutes = require("./routes/cart.routes");
+
+const productRoutes = require("./routes/product.routes");
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoutes);
+
+app.use("/api/products", productRoutes);
+
+app.use("/api/cart", cartRoutes);
 
 app.get("/", (req, res) => {
     res.json({
