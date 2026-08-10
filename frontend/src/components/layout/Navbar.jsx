@@ -1,163 +1,122 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useCart } from "../../contexts/CartContext";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import { useCart } from "../../contexts/CartContext";
 import "./Navbar.css";
 
 const Navbar = () => {
 
-    const navigate = useNavigate();
-
-    const { user, logout, isAuthenticated } = useAuth();
-
+    const { user, isAuthenticated, logout } = useAuth();
     const { cart } = useCart();
 
     const handleLogout = () => {
-
         logout();
-
-        navigate("/login");
-
     };
 
     return (
+        <header className="navbar">
 
-        <nav className="navbar">
+            <div className="navbar-container">
 
-            <div className="logo">
+                {/* LOGO */}
 
-                <Link to="/">
+                <Link to="/" className="navbar-logo">
 
-                    PC STORE
+                    <div className="logo-icon">
+                        PC
+                    </div>
 
-                </Link>
-
-            </div>
-
-            <div className="menu">
-
-                <Link to="/">
-
-                    Trang chủ
+                    <div className="logo-text">
+                        <strong>PC STORE</strong>
+                        <span>Computer & Technology</span>
+                    </div>
 
                 </Link>
 
-                <Link to="/products">
+                {/* MENU */}
 
-                    Sản phẩm
+                <nav className="navbar-menu">
 
-                </Link>
+                    <Link to="/">
+                        Trang chủ
+                    </Link>
 
-                <Link to="/cart">
+                    <Link to="/products">
+                        Sản phẩm
+                    </Link>
 
-                    🛒 Giỏ hàng
+                    <Link to="/brands">
+                        Thương hiệu
+                    </Link>
 
-                    {
+                    {isAuthenticated && (
+                        <Link to="/orders">
+                            Đơn hàng
+                        </Link>
+                    )}
 
-                        cart.length > 0 &&
+                </nav>
 
-                        (
+                {/* RIGHT */}
 
+                <div className="navbar-actions">
+
+                    <Link to="/cart" className="cart-link">
+
+                        🛒
+
+                        {cart?.length > 0 && (
                             <span className="cart-count">
-
                                 {cart.length}
-
                             </span>
-
-                        )
-
-                    }
-
-                </Link>
-
-            </div>
-
-            <div className="account">
-
-            {
-
-                isAuthenticated
-
-                ?
-
-                <>
-
-                    <Link to="/profile">
-
-                        👤
-
-                        {
-
-                            user?.fullName
-
-                            ?
-
-                            user.fullName
-
-                            :
-
-                            "Tài khoản"
-
-                        }
+                        )}
 
                     </Link>
 
-                    {
+                    {isAuthenticated ? (
 
-                        user?.role === "ADMIN"
+                        <div className="user-menu">
 
-                        &&
-
-                        (
-
-                            <Link to="/admin">
-
-                                Admin
-
+                            <Link to="/profile">
+                                👤 {user?.name || user?.email}
                             </Link>
 
-                        )
+                            {user?.role === "ADMIN" && (
+                                <Link to="/admin">
+                                    ⚙️ Admin
+                                </Link>
+                            )}
 
-                    }
+                            <button onClick={handleLogout}>
+                                Đăng xuất
+                            </button>
 
-                    <button
+                        </div>
 
-                        onClick={handleLogout}
+                    ) : (
 
-                    >
+                        <div className="auth-links">
 
-                        Đăng xuất
+                            <Link to="/login">
+                                Đăng nhập
+                            </Link>
 
-                    </button>
+                            <Link
+                                to="/register"
+                                className="register-button"
+                            >
+                                Đăng ký
+                            </Link>
 
-                </>
+                        </div>
 
-                :
+                    )}
 
-                <>
-
-                    <Link to="/login">
-
-                        Đăng nhập
-
-                    </Link>
-
-
-                    <Link to="/register">
-
-                        Đăng ký
-
-                    </Link>
-
-
-                </>
-            }
+                </div>
 
             </div>
 
-        </nav>
-
+        </header>
     );
-
 };
 
 export default Navbar;
