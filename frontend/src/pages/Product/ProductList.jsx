@@ -1,21 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
 import ProductCard from "../../components/product/ProductCard";
 import ProductSearch from "../../components/product/ProductSearch";
 import ProductFilter from "../../components/product/ProductFilter";
 import ProductSort from "../../components/product/ProductSort";
 import Pagination from "../../components/product/Pagination";
-
 import productApi from "../../api/productApi";
 import { useAuth } from "../../contexts/AuthContext";
-
 import "./ProductList.css";
-
 // ===============================
 // DANH MỤC
 // ===============================
-
 const categories = [
     {
         id: 1,
@@ -34,11 +29,9 @@ const categories = [
         name: "SSD"
     }
 ];
-
 // ===============================
 // THƯƠNG HIỆU
 // ===============================
-
 const brands = [
     {
         id: 1,
@@ -53,11 +46,9 @@ const brands = [
         name: "NVIDIA"
     }
 ];
-
 // ===============================
 // PRODUCT LIST
 // ===============================
-
 const ProductList = () => {
     const [products, setProducts] = useState([]);
     const [keyword, setKeyword] = useState("");
