@@ -11,9 +11,7 @@ const Input = ({
 }) => {
   return (
     <div className="input-group">
-
       <label>{label}</label>
-
       <input
         type={type}
         name={name}
@@ -21,9 +19,7 @@ const Input = ({
         placeholder={placeholder}
         onChange={onChange}
       />
-
       {error && <span className="error">{error}</span>}
-
     </div>
   );
 };

@@ -6,7 +6,6 @@
     align-items:center;
     background:#f4f6f8;
 }
-
 .login-card{
     width:400px;
     background:white;
@@ -14,28 +13,23 @@
     border-radius:10px;
     box-shadow:0 0 15px rgba(0,0,0,.1);
 }
-
 .login-card h1{
     text-align:center;
     margin-bottom:25px;
 }
-
 .form-group{
     margin-bottom:20px;
 }
-
 .form-group label{
     display:block;
     margin-bottom:8px;
 }
-
 .form-group input{
     width:100%;
     padding:12px;
     border:1px solid #ccc;
     border-radius:6px;
 }
-
 button{
     width:100%;
     padding:12px;
@@ -45,125 +39,71 @@ button{
     border-radius:6px;
     cursor:pointer;
 }
-
 button:hover{
     background:#0f5db5;
 }
-
 .form-group input:focus{
     outline:none;
     border:1px solid #1976d2;
 }
-
 .login-card p{
     margin-top:20px;
     text-align:center;
 }
-
 .login-card a{
     color:#1976d2;
     text-decoration:none;
     font-weight:600;
 }
-
 .login-card a:hover{
     text-decoration:underline;
 }
-
 .navbar{
-
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
     padding:15px 40px;
-
     background:#1976d2;
-
     color:white;
-
 }
-
 .logo a{
-
     color:white;
-
     text-decoration:none;
-
     font-size:24px;
-
     font-weight:bold;
-
 }
-
 .menu{
-
     display:flex;
-
     gap:20px;
-
 }
-
 .menu a{
-
     color:white;
-
     text-decoration:none;
-
 }
-
 .user-info{
-
     display:flex;
-
     align-items:center;
-
     gap:20px;
-
 }
-
 .user-info button{
-
     width:auto;
-
     padding:8px 16px;
-
     background:white;
-
     color:#1976d2;
-
 }
-
 .profile-page{
-
     display:flex;
-
     justify-content:center;
-
     padding:60px;
-
 }
-
 .profile-card{
-
     width:500px;
-
     background:white;
-
     padding:30px;
-
     border-radius:10px;
-
     box-shadow:0 0 10px rgba(0,0,0,.1);
-
 }
-
 .profile-card h2{
-
     text-align:center;
-
     margin-bottom:30px;
-
 }

@@ -1,45 +1,24 @@
 .product-edit{
-
     width:500px;
-
     margin:40px auto;
-
     padding:30px;
-
     background:white;
-
     box-shadow:0 0 10px #ddd;
-
 }
-
 .product-edit form{
-
     display:flex;
-
     flex-direction:column;
-
 }
-
 .product-edit input,
 .product-edit select,
 .product-edit textarea{
-
     padding:12px;
-
     margin-bottom:15px;
-
 }
-
 .product-edit button{
-
     padding:12px;
-
     background:#1976d2;
-
     color:white;
-
     border:none;
-
     cursor:pointer;
-
 }
