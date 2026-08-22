@@ -11,7 +11,7 @@ const Home = () => {
         const fetchProducts = async () => {
             try {
                 const response = await productApi.getAll();
-                setProducts(response.data);
+                setProducts(response.data?.data || []);
             }
             catch (error) {
                 console.log(error);

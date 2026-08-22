@@ -4,7 +4,7 @@ import Layout from "../components/layout/Layout";
 
 import ProductList from "../pages/Product/ProductList";
 
-import Login from "../pages/Auth/Login";
+import Login from "../pages/Auth/login";
 import Register from "../pages/Auth/Register";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
 
@@ -22,8 +22,8 @@ import OrderHistory from "../pages/Order/OrderHistory";
 
 import CategoryForm from "../pages/Category/CategoryForm";
 
-import BrandList from "../pages/Brand/BrandList";
-import BrandForm from "../pages/Brand/BrandForm";
+import BrandList from "../pages/brand/BrandList";
+import BrandForm from "../pages/brand/BrandForm";
 
 import Dashboard from "../pages/Admin/Dashboard";
 

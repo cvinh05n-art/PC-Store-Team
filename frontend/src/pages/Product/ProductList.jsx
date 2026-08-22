@@ -96,19 +96,14 @@ const ProductList = () => {
 
                 const response = await productApi.getAll();
 
-                setProducts(response.data || []);
+                setProducts(response.data?.data || []);
 
             }
             catch (error) {
 
-                console.log(
-                    "Lỗi lấy sản phẩm:",
-                    error
-                );
+                console.log("Lỗi lấy sản phẩm:",error);
 
-                setError(
-                    "Không thể tải danh sách sản phẩm."
-                );
+                setError("Không thể tải danh sách sản phẩm.");
 
             }
             finally {
