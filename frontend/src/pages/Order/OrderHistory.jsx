@@ -8,7 +8,12 @@ const OrderHistory = ()=>{
     const fetchOrders = async () => {
         try {
             const response = await orderApi.getMyOrders();
-            setOrders(response.data);
+                console.log("ORDERS RESPONSE:", response.data);
+                setOrders(
+                    Array.isArray(response.data)
+                        ? response.data
+                        : response.data?.data || []
+                    );
         }
         catch (error) {
             console.log(
@@ -46,7 +51,7 @@ const OrderHistory = ()=>{
                 Lịch sử đơn hàng
             </h1>
             {
-                orders.map(order=>(
+                Array.isArray(orders) && orders.map((order) => (
                     <div
                         className="order-card"
                         key={order.id}

@@ -1,21 +1,24 @@
-const mysql = require("mysql2/promise");
-const path = require("path");
-const dotenv = require("dotenv");
+const mongoose = require("mongoose");
+const connectDB = async () => {
+    try {
+        const mongoURI =
+            process.env.MONGO_URI ||
+            "mongodb://127.0.0.1:27017/pc_store_db";
 
-dotenv.config({
-    path: path.resolve(__dirname, "../../.env")
-});
+        await mongoose.connect(mongoURI);
 
-const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: Number(process.env.DB_PORT),
+        console.log("MongoDB kết nối thành công");
+        console.log(`Database: ${mongoose.connection.name}`);
 
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
+    } catch (error) {
 
-module.exports = pool;
+        console.error(
+            "MongoDB kết nối thất bại:",
+            error.message
+        );
+
+        process.exit(1);
+    }
+};
+
+module.exports = connectDB;

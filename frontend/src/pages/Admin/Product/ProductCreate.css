@@ -1,45 +1,24 @@
 .product-create{
-
     width:500px;
-
     margin:40px auto;
-
     padding:30px;
-
     background:white;
-
     box-shadow:0 0 10px #ddd;
-
 }
-
 .product-create form{
-
     display:flex;
-
     flex-direction:column;
-
 }
-
 .product-create input,
 .product-create select,
 .product-create textarea{
-
     padding:12px;
-
     margin-bottom:15px;
-
 }
-
 .product-create button{
-
     padding:12px;
-
     background:#1976d2;
-
     color:white;
-
     border:none;
-
     cursor:pointer;
-
 }

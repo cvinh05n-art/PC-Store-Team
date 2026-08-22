@@ -3,18 +3,15 @@
     background:#f5f7fa;
     min-height:100vh;
 }
-
 .header{
     display:flex;
     justify-content:space-between;
     align-items:center;
     margin-bottom:20px;
 }
-
 .header h1{
     color:#333;
 }
-
 .header button{
     background:#1976d2;
     color:white;
@@ -24,11 +21,9 @@
     cursor:pointer;
     font-weight:bold;
 }
-
 .header button:hover{
     background:#125bb5;
 }
-
 .search{
     width:350px;
     padding:10px 15px;
@@ -37,7 +32,6 @@
     border-radius:8px;
     font-size:15px;
 }
-
 table{
     width:100%;
     border-collapse:collapse;
@@ -46,35 +40,29 @@ table{
     overflow:hidden;
     box-shadow:0 4px 10px rgba(0,0,0,.08);
 }
-
 th{
     background:#1976d2;
     color:white;
     padding:15px;
 }
-
 td{
     text-align:center;
     padding:15px;
     border-bottom:1px solid #eee;
 }
-
 tr:hover{
     background:#f7f9fc;
 }
-
 .product-image{
     width:70px;
     height:70px;
     object-fit:cover;
     border-radius:8px;
 }
-
 .in-stock{
     color:green;
     font-weight:bold;
 }
-
 .edit-btn{
     background:#ff9800;
     color:white;
@@ -84,11 +72,9 @@ tr:hover{
     border-radius:5px;
     cursor:pointer;
 }
-
 .edit-btn:hover{
     background:#ef6c00;
 }
-
 .delete-btn{
     background:#e53935;
     color:white;
@@ -97,7 +83,6 @@ tr:hover{
     border-radius:5px;
     cursor:pointer;
 }
-
 .delete-btn:hover{
     background:#c62828;
 }
