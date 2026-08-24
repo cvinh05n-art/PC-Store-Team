@@ -1,81 +1,97 @@
 import { Link } from "react-router-dom";
-import "./BrandTable.css";
 
-const BrandTable = ({ brands, onDelete }) => {
+const BrandTable = ({
+    brands,
+    onDelete
+}) => {
 
     return (
+        <div className="brand-table-wrapper">
 
-        <table className="brand-table">
+            <table className="brand-table">
 
-            <thead>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên thương hiệu</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
 
-                <tr>
+                <tbody>
 
-                    <th>ID</th>
+                    {brands.length === 0 ? (
 
-                    <th>Tên thương hiệu</th>
-
-                    <th>Thao tác</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                {
-                    brands.map((brand)=>(
-
-                        <tr key={brand.id}>
-
-                            <td>
-                                {brand.id}
+                        <tr>
+                            <td
+                                colSpan="3"
+                                className="empty-row"
+                            >
+                                Chưa có thương hiệu nào.
                             </td>
-
-                            <td>
-                                {brand.name}
-                            </td>
-
-                            <td>
-
-                                <Link 
-                                    to={`/admin/brands/edit/${brand.id}`}
-                                >
-
-                                    <button className="edit-btn">
-
-                                        Sửa
-
-                                    </button>
-
-                                </Link>
-                                <button
-
-                                    className="delete-btn"
-
-                                    onClick={()=>
-                                        onDelete(brand.id)
-                                    }
-
-                                >
-
-                                    Xóa
-
-                                </button>
-
-                            </td>
-
                         </tr>
 
-                    ))
-                }
+                    ) : (
 
-            </tbody>
+                        brands.map((brand, index) => {
 
-        </table>
+                            const brandId =
+                                brand._id || brand.id;
 
+                            return (
+                                <tr
+                                    key={brandId}
+                                >
+
+                                    <td>
+                                        {index + 1}
+                                    </td>
+
+                                    <td>
+                                        {brand.name}
+                                    </td>
+
+                                    <td>
+
+                                        <div className="brand-actions">
+
+                                            <Link
+                                                to={`/admin/brands/edit/${brandId}`}
+                                            >
+                                                <button
+                                                    className="edit-btn"
+                                                >
+                                                    Sửa
+                                                </button>
+                                            </Link>
+
+                                            <button
+                                                className="delete-btn"
+                                                onClick={() =>
+                                                    onDelete(
+                                                        brandId
+                                                    )
+                                                }
+                                            >
+                                                Xóa
+                                            </button>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+                            );
+                        })
+
+                    )}
+
+                </tbody>
+
+            </table>
+
+        </div>
     );
-
-}
+};
 
 export default BrandTable;
