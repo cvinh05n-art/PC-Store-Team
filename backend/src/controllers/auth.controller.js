@@ -2,6 +2,10 @@ const authService = require("../services/auth.service");
 
 const authController = {
 
+    // =========================
+    // REGISTER
+    // =========================
+
     async register(req, res) {
 
         try {
@@ -59,6 +63,10 @@ const authController = {
     },
 
 
+    // =========================
+    // LOGIN
+    // =========================
+
     async login(req, res) {
 
         try {
@@ -106,6 +114,187 @@ const authController = {
             );
 
             return res.status(401).json({
+
+                success: false,
+
+                message: error.message
+
+            });
+
+        }
+    },
+
+
+    // =========================
+    // FORGOT PASSWORD
+    // =========================
+
+    async forgotPassword(req, res) {
+
+        try {
+
+            const {
+                email
+            } = req.body;
+
+            if (!email) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message:
+                        "Vui lòng nhập email"
+
+                });
+
+            }
+
+            const result =
+                await authService.forgotPassword(
+                    email
+                );
+
+            return res.status(200).json({
+
+                success: true,
+
+                message: result.message
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Lỗi quên mật khẩu:",
+                error
+            );
+
+            return res.status(400).json({
+
+                success: false,
+
+                message: error.message
+
+            });
+
+        }
+    },
+
+
+    // =========================
+    // VERIFY OTP
+    // =========================
+
+    async verifyOtp(req, res) {
+
+        try {
+
+            const {
+                email,
+                otp
+            } = req.body;
+
+            if (!email || !otp) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message:
+                        "Vui lòng nhập email và mã OTP"
+
+                });
+
+            }
+
+            const result =
+                await authService.verifyOtp(
+                    email,
+                    otp
+                );
+
+            return res.status(200).json({
+
+                success: true,
+
+                message: result.message
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Lỗi xác thực OTP:",
+                error
+            );
+
+            return res.status(400).json({
+
+                success: false,
+
+                message: error.message
+
+            });
+
+        }
+    },
+
+
+    // =========================
+    // RESET PASSWORD
+    // =========================
+
+    async resetPassword(req, res) {
+
+        try {
+
+            const {
+                email,
+                otp,
+                newPassword
+            } = req.body;
+
+            if (
+                !email ||
+                !otp ||
+                !newPassword
+            ) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message:
+                        "Vui lòng nhập đầy đủ thông tin"
+
+                });
+
+            }
+
+            const result =
+                await authService.resetPassword(
+                    email,
+                    otp,
+                    newPassword
+                );
+
+            return res.status(200).json({
+
+                success: true,
+
+                message: result.message
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Lỗi đặt lại mật khẩu:",
+                error
+            );
+
+            return res.status(400).json({
 
                 success: false,
 

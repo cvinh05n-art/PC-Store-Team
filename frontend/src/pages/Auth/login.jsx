@@ -1,222 +1,178 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-
-import { useAuth } from "../../contexts/AuthContext";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import authApi from "../../api/authApi";
-
-import Input from "../../components/common/Input";
-import Button from "../../components/common/Button";
-import Toast from "../../components/common/Toast";
-
-import "../../components/common/Toast.css";
+import "./Login.css";
 
 const Login = () => {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
-    const { login } = useAuth();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-    const [form, setForm] = useState({
-        email: "",
-        password: ""
-    });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-    const [loading, setLoading] = useState(false);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-    const [toast, setToast] = useState({
-        show: false,
-        message: "",
-        type: "success"
-    });
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
 
-    const handleChange = (e) => {
+    if (error) {
+      setError("");
+    }
+  };
 
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value
-        });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    };
+    setError("");
 
-    const showToast = (message, type = "success") => {
+    if (!formData.email.trim()) {
+      setError("Vui lòng nhập email.");
+      return;
+    }
 
-        setToast({
-            show: true,
-            message,
-            type
-        });
+    if (!formData.password) {
+      setError("Vui lòng nhập mật khẩu.");
+      return;
+    }
 
-        setTimeout(() => {
+    try {
+      setLoading(true);
 
-            setToast({
-                show: false,
-                message: "",
-                type: "success"
-            });
+      const response = await authApi.login({
+        email: formData.email.trim(),
+        password: formData.password,
+      });
 
-        }, 2500);
+      console.log("Login response:", response);
 
-    };
+      // Tùy cấu trúc response của backend
+      const data = response?.data || response;
 
-    // QUAN TRỌNG: hàm này phải có async
-    const handleSubmit = async (e) => {
+      if (data?.token) {
+        localStorage.setItem("token", data.token);
+      }
 
-        e.preventDefault();
+      if (data?.accessToken) {
+        localStorage.setItem("token", data.accessToken);
+      }
 
-        if (!form.email || !form.password) {
+      if (data?.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+      }
 
-            showToast(
-                "Vui lòng nhập email và mật khẩu",
-                "error"
-            );
+      // Nếu backend trả user bên trong data.data
+      if (data?.data?.token) {
+        localStorage.setItem("token", data.data.token);
+      }
 
-            return;
-        }
+      if (data?.data?.user) {
+        localStorage.setItem("user", JSON.stringify(data.data.user));
+      }
 
-        setLoading(true);
+      navigate("/");
+    } catch (err) {
+      console.error("Login error:", err);
 
-        try {
+      const message =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        err?.message ||
+        "Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.";
 
-            const response = await authApi.login(form);
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            console.log(
-                "LOGIN RESPONSE:",
-                response.data
-            );
+  return (
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="auth-logo">
+          <div className="logo-box">PC</div>
 
-            const { token, user } =
-                response.data.data;
-
-            console.log(
-                "TOKEN:",
-                token
-            );
-
-            console.log(
-                "USER:",
-                user
-            );
-
-            // Lưu token + user
-            const success = login(
-                user,
-                token
-            );
-
-            if (!success) {
-
-                showToast(
-                    "Không nhận được token đăng nhập",
-                    "error"
-                );
-
-                return;
-            }
-
-            showToast(
-                "Đăng nhập thành công!",
-                "success"
-            );
-
-            setTimeout(() => {
-
-                navigate("/");
-
-            }, 1000);
-
-        } catch (error) {
-
-            console.error(
-                "Lỗi đăng nhập:",
-                error
-            );
-
-            const message =
-                error.response?.data?.message ||
-                "Email hoặc mật khẩu không đúng";
-
-            showToast(
-                message,
-                "error"
-            );
-
-        } finally {
-
-            setLoading(false);
-
-        }
-
-    };
-
-    return (
-
-        <div className="login-page">
-
-            {toast.show && (
-                <Toast
-                    message={toast.message}
-                    type={toast.type}
-                />
-            )}
-
-            <div className="login-card">
-
-                <h1>Đăng nhập</h1>
-
-                <form onSubmit={handleSubmit}>
-
-                    <Input
-                        label="Email"
-                        type="email"
-                        name="email"
-                        value={form.email}
-                        placeholder="Nhập email"
-                        onChange={handleChange}
-                    />
-
-                    <Input
-                        label="Mật khẩu"
-                        type="password"
-                        name="password"
-                        value={form.password}
-                        placeholder="Nhập mật khẩu"
-                        onChange={handleChange}
-                    />
-
-                    <Button
-                        type="submit"
-                        text={
-                            loading
-                                ? "Đang đăng nhập..."
-                                : "Đăng nhập"
-                        }
-                        disabled={loading}
-                    />
-
-                    <p className="forgot-password">
-
-                        <Link to="/forgot-password">
-                            Quên mật khẩu?
-                        </Link>
-
-                    </p>
-
-                </form>
-
-                <p>
-
-                    Chưa có tài khoản?{" "}
-
-                    <Link to="/register">
-                        Đăng ký ngay
-                    </Link>
-
-                </p>
-
+          <div>
+            <div className="logo-title">PC STORE</div>
+            <div className="logo-subtitle">
+              Computer & Technology
             </div>
-
+          </div>
         </div>
 
-    );
+        <h1>Đăng nhập</h1>
+
+        <p className="auth-description">
+          Đăng nhập để tiếp tục mua sắm tại PC Store
+        </p>
+
+        {error && (
+          <div className="auth-error">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+
+            <input
+              id="email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Nhập email"
+              autoComplete="email"
+              disabled={loading}
+            />
+          </div>
+
+          <div className="form-group">
+            <div className="password-label">
+              <label htmlFor="password">Mật khẩu</label>
+
+              <Link to="/forgot-password">
+                Quên mật khẩu?
+              </Link>
+            </div>
+
+            <input
+              id="password"
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Nhập mật khẩu"
+              autoComplete="current-password"
+              disabled={loading}
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="login-button"
+            disabled={loading}
+          >
+            {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+          </button>
+        </form>
+
+        <div className="register-text">
+          Chưa có tài khoản?{" "}
+          <Link to="/register">
+            Đăng ký ngay
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Login;
