@@ -1,100 +1,58 @@
-.brand-view {
-    min-height: calc(100vh - 150px);
-    padding: 50px 24px 70px;
-    background: #f5f7fb;
-}
+/* =========================
+   LINK XEM SẢN PHẨM
+========================= */
 
-.brand-view-header {
-    width: min(100%, 1100px);
-    margin: 0 auto 35px;
-}
+.brand-products-link {
 
-.brand-eyebrow {
-    margin: 0 0 6px;
-    color: #2563eb;
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 1.2px;
-}
+    display: inline-block;
 
-.brand-view-header h1 {
-    margin: 0;
-    color: #0f172a;
-    font-size: 38px;
-}
-
-.brand-view-header p:last-child {
     margin-top: 8px;
-    color: #64748b;
-}
 
-.brand-grid {
-    width: min(100%, 1100px);
-    margin: 0 auto;
+    color: #2563eb;
 
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-}
+    text-decoration: none;
 
-.brand-card {
-    padding: 28px 20px;
-    text-align: center;
-
-    background: #ffffff;
-    border: 1px solid #e5eaf2;
-    border-radius: 18px;
-
-    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+    font-weight: 600;
 
     transition: 0.2s;
+
 }
 
-.brand-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(15, 23, 42, 0.1);
+
+/* Hiệu ứng hover */
+
+.brand-products-link:hover {
+
+    color: #1d4ed8;
+
+    text-decoration: underline;
+
 }
 
-.brand-logo {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 15px;
 
-    display: grid;
-    place-items: center;
+/* =========================
+   THÔNG BÁO LỖI
+========================= */
 
-    border-radius: 16px;
+.brand-error {
 
-    background: #eff6ff;
-    color: #2563eb;
+    color: #dc2626 !important;
 
-    font-size: 24px;
-    font-weight: 800;
 }
 
-.brand-card h3 {
-    margin: 0 0 8px;
-    color: #0f172a;
-    font-size: 20px;
-}
 
-.brand-card span {
+/* =========================
+   KHÔNG CÓ THƯƠNG HIỆU
+========================= */
+
+.brand-empty {
+
+    grid-column: 1 / -1;
+
+    padding: 60px 20px;
+
+    text-align: center;
+
     color: #64748b;
-    font-size: 13px;
-}
 
-@media (max-width: 850px) {
-    .brand-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 500px) {
-    .brand-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .brand-view {
-        padding: 30px 15px 50px;
-    }
 }

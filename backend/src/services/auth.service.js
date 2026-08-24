@@ -363,7 +363,58 @@ const authService = {
             message:
                 "Đặt lại mật khẩu thành công"
         };
-    }
+    },
+
+
+    // =========================
+    // CẬP NHẬT HỒ SƠ
+    // =========================
+
+    async updateProfile(userId, data) {
+        const user = await User.findById(userId);
+        if (!user) throw new Error("Không tìm thấy tài khoản");
+
+        if (data.fullName !== undefined) user.name = data.fullName.trim();
+        if (data.email !== undefined) {
+            const email = data.email.toLowerCase().trim();
+            const duplicate = await User.findOne({ email, _id: { $ne: userId } });
+            if (duplicate) throw new Error("Email đã tồn tại");
+            user.email = email;
+        }
+        if (data.phone !== undefined) user.phone = data.phone.trim();
+        if (data.avatar !== undefined) user.avatar = data.avatar;
+
+        await user.save();
+        return {
+            id: user._id,
+            fullName: user.name,
+            email: user.email,
+            phone: user.phone,
+            avatar: user.avatar,
+            role: user.role
+        };
+    },
+
+    // =========================
+    // ĐỔI MẬT KHẨU KHI ĐÃ ĐĂNG NHẬP
+    // =========================
+
+    async changePassword(userId, oldPassword, newPassword) {
+        const user = await User.findById(userId).select("+password");
+        if (!user) throw new Error("Không tìm thấy tài khoản");
+
+        const valid = await bcrypt.compare(oldPassword, user.password);
+        if (!valid) throw new Error("Mật khẩu cũ không đúng");
+
+        if (!newPassword || newPassword.length < 6) {
+            throw new Error("Mật khẩu mới phải có ít nhất 6 ký tự");
+        }
+
+        user.password = await bcrypt.hash(newPassword, 10);
+        await user.save();
+
+        return { message: "Đổi mật khẩu thành công" };
+    },
 
 };
 

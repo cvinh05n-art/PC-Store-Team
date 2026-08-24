@@ -303,7 +303,41 @@ const authController = {
             });
 
         }
-    }
+    },
+
+
+    // =========================
+    // CẬP NHẬT PROFILE
+    // =========================
+
+    async updateProfile(req, res) {
+        try {
+            const user = await authService.updateProfile(req.user.id, req.body);
+            return res.status(200).json({ success: true, message: "Cập nhật hồ sơ thành công", data: user });
+        } catch (error) {
+            return res.status(400).json({ success: false, message: error.message });
+        }
+    },
+
+    // =========================
+    // ĐỔI MẬT KHẨU
+    // =========================
+
+    async changePassword(req, res) {
+        try {
+            const { oldPassword, newPassword, confirmPassword } = req.body;
+            if (!oldPassword || !newPassword || !confirmPassword) {
+                return res.status(400).json({ success: false, message: "Vui lòng nhập đầy đủ thông tin" });
+            }
+            if (newPassword !== confirmPassword) {
+                return res.status(400).json({ success: false, message: "Mật khẩu xác nhận không khớp" });
+            }
+            const result = await authService.changePassword(req.user.id, oldPassword, newPassword);
+            return res.status(200).json({ success: true, message: result.message });
+        } catch (error) {
+            return res.status(400).json({ success: false, message: error.message });
+        }
+    },
 
 };
 

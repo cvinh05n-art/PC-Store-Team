@@ -4,7 +4,10 @@ import {
     useState
 } from "react";
 
-import { Link } from "react-router-dom";
+import {
+    Link,
+    useSearchParams
+} from "react-router-dom";
 
 import ProductCard
     from "../../components/product/ProductCard";
@@ -37,6 +40,21 @@ import "./ProductList.css";
 
 
 const ProductList = () => {
+    // =========================
+// LẤY THAM SỐ TỪ URL
+// =========================
+// Ví dụ:
+// /products?brand=65abc123
+//
+// brandFromUrl sẽ là:
+// 65abc123
+// =========================
+
+const [searchParams] =
+    useSearchParams();
+
+const brandFromUrl =
+    searchParams.get("brand") || "";
 
     // =========================
     // DỮ LIỆU SẢN PHẨM
@@ -78,14 +96,15 @@ const ProductList = () => {
         useState("");
 
 
-    // =========================
-    // THƯƠNG HIỆU ĐANG CHỌN
-    // =========================
+// =========================
+// THƯƠNG HIỆU ĐANG CHỌN
+// =========================
+// Nếu URL có ?brand=...
+// thì tự chọn thương hiệu đó.
+// =========================
 
-    const [brand, setBrand] =
-        useState("");
-
-
+const [brand, setBrand] =
+    useState(brandFromUrl);
     // =========================
     // KIỂU SẮP XẾP
     // =========================
@@ -102,6 +121,21 @@ const ProductList = () => {
         useState(true);
 
 
+        // =========================
+    // ĐỒNG BỘ BRAND TỪ URL
+    // =========================
+    // Khi người dùng bấm một thương hiệu
+    // từ trang /brands, URL thay đổi.
+    // State brand cũng phải cập nhật theo.
+    // =========================
+
+    useEffect(() => {
+
+    setBrand(
+        searchParams.get("brand") || ""
+    );
+
+}, [searchParams]);
     // =========================
     // THÔNG BÁO LỖI
     // =========================
