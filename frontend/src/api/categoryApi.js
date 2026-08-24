@@ -1,41 +1,47 @@
 import axiosClient from "./axiosClient";
 
-const brandApi = {
+const categoryApi = {
 
     // =========================
-    // LẤY DANH SÁCH THƯƠNG HIỆU
+    // LẤY DANH SÁCH DANH MỤC
+    // =========================
+    // Gọi API backend để lấy
+    // toàn bộ danh mục sản phẩm.
     // =========================
 
-    getBrands() {
+    getCategories() {
 
         return axiosClient.get(
-            "/brands"
+            "/categories"
         );
 
     },
 
 
     // =========================
-    // LẤY 1 THƯƠNG HIỆU
+    // LẤY CHI TIẾT DANH MỤC
+    // =========================
+    // Gọi API lấy một danh mục
+    // theo ID.
     // =========================
 
-    getBrandById(id) {
+    getCategoryById(id) {
 
         return axiosClient.get(
-            `/brands/${id}`
+            `/categories/${id}`
         );
 
     },
 
 
     // =========================
-    // THÊM THƯƠNG HIỆU
+    // THÊM DANH MỤC
     // =========================
 
-    createBrand(data) {
+    createCategory(data) {
 
         return axiosClient.post(
-            "/brands",
+            "/categories",
             data
         );
 
@@ -43,13 +49,13 @@ const brandApi = {
 
 
     // =========================
-    // SỬA THƯƠNG HIỆU
+    // CẬP NHẬT DANH MỤC
     // =========================
 
-    updateBrand(id, data) {
+    updateCategory(id, data) {
 
         return axiosClient.put(
-            `/brands/${id}`,
+            `/categories/${id}`,
             data
         );
 
@@ -57,17 +63,17 @@ const brandApi = {
 
 
     // =========================
-    // XÓA THƯƠNG HIỆU
+    // XÓA DANH MỤC
     // =========================
 
-    deleteBrand(id) {
+    deleteCategory(id) {
 
         return axiosClient.delete(
-            `/brands/${id}`
+            `/categories/${id}`
         );
 
     }
 
 };
 
-export default brandApi;
+export default categoryApi;

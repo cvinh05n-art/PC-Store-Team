@@ -8,6 +8,10 @@ import Login from "../pages/Auth/login";
 import Register from "../pages/Auth/Register";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
 
+import Contact from "../pages/Info/Contact";
+import Policy from "../pages/Info/Policy";
+import ShippingPolicy from "../pages/Info/ShippingPolicy";
+
 import ProtectedRoute from "./ProtectedRoute";
 
 import Home from "../pages/Home/Home";
@@ -35,6 +39,10 @@ import ProductEdit from "../pages/Admin/Product/ProductEdit";
 import OrderManagement from "../pages/Admin/Order/OrderManagement";
 
 import UserManagement from "../pages/Admin/User/UserManagement";
+
+
+
+
 
 const AppRoutes = () => {
 
@@ -247,7 +255,19 @@ const AppRoutes = () => {
                         </ProtectedRoute>
                     }
                 />
-
+                {/* INFO PAGES */}
+                <Route
+                    path="/contact"
+                    element={<Contact />}
+                />
+                <Route
+                    path="/policy"
+                    element={<Policy />}
+                />
+                <Route
+                    path="/shipping-policy"
+                    element={<ShippingPolicy />}
+                />
             </Route>
 
         </Routes>

@@ -1,44 +1,93 @@
 import "./ProductFilter.css";
 
 const ProductFilter = ({
-  categories,
-  brands,
-  selectedCategory,
-  selectedBrand,
-  onCategoryChange,
-  onBrandChange,
+    categories,
+    brands,
+    selectedCategory,
+    selectedBrand,
+    onCategoryChange,
+    onBrandChange
 }) => {
-  return (
-    <div className="filter-container">
 
-      <select
-        value={selectedCategory}
-        onChange={(e) => onCategoryChange(e.target.value)}
-      >
-        <option value="">Tất cả danh mục</option>
+    return (
 
-        {categories.map((category) => (
-          <option key={category.id} value={category.name}>
-            {category.name}
-          </option>
-        ))}
-      </select>
+        <div className="filter-container">
 
-      <select
-        value={selectedBrand}
-        onChange={(e) => onBrandChange(e.target.value)}
-      >
-        <option value="">Tất cả thương hiệu</option>
+            {/* =========================
+                LỌC THEO DANH MỤC
+            ========================= */}
 
-        {brands.map((brand) => (
-          <option key={brand.id} value={brand.name}>
-            {brand.name}
-          </option>
-        ))}
-      </select>
+            <select
+                value={selectedCategory}
+                onChange={(e) => {
 
-    </div>
-  );
+                    // Lưu ID danh mục được chọn.
+                    // Không reset thương hiệu.
+                    // Vì vậy có thể lọc Category + Brand cùng lúc.
+
+                    onCategoryChange(
+                        e.target.value
+                    );
+
+                }}
+            >
+
+                <option value="">
+                    Tất cả danh mục
+                </option>
+
+                {categories.map((category) => (
+
+                    <option
+                        key={category._id}
+                        value={category._id}
+                    >
+                        {category.name}
+                    </option>
+
+                ))}
+
+            </select>
+
+
+            {/* =========================
+                LỌC THEO THƯƠNG HIỆU
+            ========================= */}
+
+            <select
+                value={selectedBrand}
+                onChange={(e) => {
+
+                    // Lưu ID thương hiệu được chọn.
+                    // Không reset danh mục.
+
+                    onBrandChange(
+                        e.target.value
+                    );
+
+                }}
+            >
+
+                <option value="">
+                    Tất cả thương hiệu
+                </option>
+
+                {brands.map((brand) => (
+
+                    <option
+                        key={brand._id}
+                        value={brand._id}
+                    >
+                        {brand.name}
+                    </option>
+
+                ))}
+
+            </select>
+
+        </div>
+
+    );
 };
 
 export default ProductFilter;

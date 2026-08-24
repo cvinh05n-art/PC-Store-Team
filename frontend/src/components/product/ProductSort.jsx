@@ -2,22 +2,61 @@ const ProductSort = ({
     sort,
     onSortChange
 }) => {
+
     return (
-        <select
-            value={sort}
-            onChange={(e) => onSortChange(e.target.value)}
-        >
-            <option value="">Sắp xếp</option>
-            <option value="priceAsc">
-                Giá tăng dần
-            </option>
-            <option value="priceDesc">
-                Giá giảm dần
-            </option>
-            <option value="name">
-                Theo tên
-            </option>
-        </select>
+
+        <div className="product-sort">
+
+            <select
+                value={sort}
+                onChange={(e) => {
+
+                    // Lưu kiểu sắp xếp được chọn.
+                    onSortChange(
+                        e.target.value
+                    );
+
+                }}
+            >
+
+                {/* Không sắp xếp */}
+
+                <option value="">
+                    Sắp xếp
+                </option>
+
+
+                {/* Giá tăng dần */}
+
+                <option value="priceAsc">
+                    Giá tăng dần
+                </option>
+
+
+                {/* Giá giảm dần */}
+
+                <option value="priceDesc">
+                    Giá giảm dần
+                </option>
+
+
+                {/* Tên A-Z */}
+
+                <option value="nameAsc">
+                    Tên A-Z
+                </option>
+
+
+                {/* Tên Z-A */}
+
+                <option value="nameDesc">
+                    Tên Z-A
+                </option>
+
+            </select>
+
+        </div>
+
     );
 };
 

@@ -52,17 +52,17 @@ const Footer = () => {
 
                     <h3>Hỗ trợ</h3>
 
-                    <a href="#contact">
+                    <Link to="/contact">
                         Liên hệ
-                    </a>
+                    </Link>
 
-                    <a href="#policy">
+                    <Link to="/policy">
                         Chính sách
-                    </a>
+                    </Link>
 
-                    <a href="#shipping">
+                    <Link to="/shipping-policy">
                         Chính sách giao hàng
-                    </a>
+                    </Link>
 
                 </div>
 
@@ -75,11 +75,11 @@ const Footer = () => {
                     </p>
 
                     <p>
-                        ☎ 0123 456 789
+                        ☎ 0383 415 367
                     </p>
 
                     <p>
-                        ✉ support@pcstore.com
+                        ✉ cvinh05n@gmail.com
                     </p>
 
                 </div>
