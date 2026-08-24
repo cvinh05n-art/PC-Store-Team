@@ -1,39 +1,31 @@
 import axiosClient from "./axiosClient";
 
 const authApi = {
+  login(data) {
+    return axiosClient.post(
+      "/auth/login",
+      data
+    );
+  },
 
-    login(data){
+  register(data) {
+    return axiosClient.post(
+      "/auth/register",
+      data
+    );
+  },
 
-        return axiosClient.post(
+  forgotPassword(data) {
+    return axiosClient.post(
+      "/auth/forgot-password",
+      data
+    );
+  },
 
-            "/auth/login",
-
-            data
-
-        );
-
-    },
-
-    register(data){
-
-        return axiosClient.post(
-
-            "/auth/register",
-
-            data
-
-        );
-
-    },
-
-    logout(){
-
+  logout() {
     localStorage.removeItem("token");
-
     localStorage.removeItem("user");
-
-    }
-
+  },
 };
 
 export default authApi;

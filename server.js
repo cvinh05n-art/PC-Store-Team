@@ -1,60 +1,134 @@
-require("dotenv").config();
+require("dotenv").config({
+  path: ".env.local"
+});
 
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-// Import routes
+
+// ===============================
+// IMPORT ROUTES
+// ===============================
+
+const authRoutes = require("./routes/auth.route");
 const categoryRoutes = require("./routes/category.route");
 const brandRoutes = require("./routes/brand.route");
 const orderRoutes = require("./routes/order.route");
+
+// ===============================
+// CREATE APP
+// ===============================
+
 const app = express();
-// Middleware chung
+
+// ===============================
+// MIDDLEWARE
+// ===============================
+
 app.use(cors());
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-// API kiểm tra server
+
+app.use(express.urlencoded({
+  extended: true
+}));
+
+// ===============================
+// TEST SERVER
+// ===============================
+
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
     message: "API đang hoạt động"
   });
 });
-// Đăng ký routes
+
+// ===============================
+// API ROUTES
+// ===============================
+
+// Authentication
+app.use("/api/auth", authRoutes);
+
+// Categories
 app.use("/api/categories", categoryRoutes);
+
+// Brands
 app.use("/api/brands", brandRoutes);
+
+// Orders
 app.use("/api/orders", orderRoutes);
-// Xử lý đường dẫn API không tồn tại
-// Phải đặt sau tất cả routes
+
+// ===============================
+// 404
+// ===============================
+
 app.use((req, res) => {
   res.status(404).json({
     success: false,
     message: "Không tìm thấy API"
   });
 });
-// Middleware xử lý lỗi chung
-// Phải đặt cuối cùng
+
+// ===============================
+// ERROR HANDLER
+// ===============================
+
 app.use((err, req, res, next) => {
-  console.error(err);
+  console.error("Lỗi server:", err);
+
   res.status(err.statusCode || 500).json({
     success: false,
     message: err.message || "Lỗi máy chủ"
   });
 });
-// Cấu hình
+
+// ===============================
+// CONFIG
+// ===============================
+
 const PORT = process.env.PORT || 5000;
+
 const MONGO_URI =
   process.env.MONGO_URI ||
   "mongodb://127.0.0.1:27017/product_management";
-// Kết nối MongoDB rồi chạy server
+
+// ===============================
+// CHECK ENV
+// ===============================
+
+console.log("----------------------------------");
+console.log("MAIL_USER:", process.env.MAIL_USER);
+console.log(
+  "MAIL_PASS length:",
+  process.env.MAIL_PASS
+    ? process.env.MAIL_PASS.length
+    : 0
+);
+console.log("PORT:", PORT);
+console.log("----------------------------------");
+
+// ===============================
+// CONNECT MONGODB
+// ===============================
+
 mongoose
   .connect(MONGO_URI)
   .then(() => {
     console.log("Kết nối MongoDB thành công");
+
     app.listen(PORT, () => {
-      console.log(`Server đang chạy tại http://localhost:${PORT}`);
+      console.log(
+        `Server đang chạy tại http://localhost:${PORT}`
+      );
     });
   })
   .catch((error) => {
-    console.error("Kết nối MongoDB thất bại:", error.message);
+    console.error(
+      "Kết nối MongoDB thất bại:",
+      error.message
+    );
+
     process.exit(1);
   });
