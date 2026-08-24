@@ -1,9 +1,17 @@
 .search-box{
+
     margin-bottom:30px;
+
 }
+
 .search-box input{
+
     width:100%;
+
     padding:12px;
+
     border-radius:6px;
+
     border:1px solid #ddd;
+
 }

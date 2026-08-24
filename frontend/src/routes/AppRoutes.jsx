@@ -1,25 +1,38 @@
 import { Routes, Route } from "react-router-dom";
+
 import Layout from "../components/layout/Layout";
+
 import ProductList from "../pages/Product/ProductList";
+
 import Login from "../pages/Auth/login";
 import Register from "../pages/Auth/Register";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
+
 import ProtectedRoute from "./ProtectedRoute";
+
 import Home from "../pages/Home/Home";
 import Profile from "../pages/Profile/Profile";
 import ChangePassword from "../pages/ChangePassword/ChangePassword";
+
 import ProductDetail from "../pages/Product/ProductDetail";
+
 import Cart from "../pages/Cart/Cart";
 import Checkout from "../pages/Order/Checkout";
 import OrderHistory from "../pages/Order/OrderHistory";
+
 import CategoryForm from "../pages/Category/CategoryForm";
-import BrandList from "../pages/Brand/BrandList";
-import BrandForm from "../pages/Brand/BrandForm";
+
+import BrandList from "../pages/brand/BrandList";
+import BrandForm from "../pages/brand/BrandForm";
+
 import Dashboard from "../pages/Admin/Dashboard";
+
 import ProductManagement from "../pages/Admin/Product/ProductManagement";
 import ProductCreate from "../pages/Admin/Product/ProductCreate";
 import ProductEdit from "../pages/Admin/Product/ProductEdit";
+
 import OrderManagement from "../pages/Admin/Order/OrderManagement";
+
 import UserManagement from "../pages/Admin/User/UserManagement";
 
 const AppRoutes = () => {

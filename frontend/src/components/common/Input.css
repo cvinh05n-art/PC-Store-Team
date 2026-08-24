@@ -3,20 +3,24 @@
     flex-direction:column;
     margin-bottom:18px;
 }
+
 .input-group label{
     margin-bottom:8px;
     font-weight:600;
 }
+
 .input-group input{
     padding:12px;
     border:1px solid #ddd;
     border-radius:6px;
     transition:.3s;
 }
+
 .input-group input:focus{
     outline:none;
     border-color:#1976d2;
 }
+
 .error{
     color:red;
     font-size:13px;
