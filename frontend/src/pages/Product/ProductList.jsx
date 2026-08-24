@@ -1,92 +1,144 @@
-import { useEffect, useState } from "react";
+import {
+    useEffect,
+    useMemo,
+    useState
+} from "react";
+
 import { Link } from "react-router-dom";
 
-import ProductCard from "../../components/product/ProductCard";
-import ProductSearch from "../../components/product/ProductSearch";
-import ProductFilter from "../../components/product/ProductFilter";
-import ProductSort from "../../components/product/ProductSort";
-import Pagination from "../../components/product/Pagination";
+import ProductCard
+    from "../../components/product/ProductCard";
 
-import productApi from "../../api/productApi";
-import { useAuth } from "../../contexts/AuthContext";
+import ProductSearch
+    from "../../components/product/ProductSearch";
+
+import ProductFilter
+    from "../../components/product/ProductFilter";
+
+import ProductSort
+    from "../../components/product/ProductSort";
+
+import Pagination
+    from "../../components/product/Pagination";
+
+import productApi
+    from "../../api/productApi";
+
+import categoryApi
+    from "../../api/categoryApi";
+
+import brandApi
+    from "../../api/brandApi";
+
+import { useAuth }
+    from "../../contexts/AuthContext";
 
 import "./ProductList.css";
 
-// ===============================
-// DANH MỤC
-// ===============================
-
-const categories = [
-    {
-        id: 1,
-        name: "CPU"
-    },
-    {
-        id: 2,
-        name: "GPU"
-    },
-    {
-        id: 3,
-        name: "RAM"
-    },
-    {
-        id: 4,
-        name: "SSD"
-    }
-];
-
-// ===============================
-// THƯƠNG HIỆU
-// ===============================
-
-const brands = [
-    {
-        id: 1,
-        name: "Intel"
-    },
-    {
-        id: 2,
-        name: "AMD"
-    },
-    {
-        id: 3,
-        name: "NVIDIA"
-    }
-];
-
-// ===============================
-// PRODUCT LIST
-// ===============================
 
 const ProductList = () => {
 
-    const [products, setProducts] = useState([]);
+    // =========================
+    // DỮ LIỆU SẢN PHẨM
+    // =========================
 
-    const [keyword, setKeyword] = useState("");
+    const [products, setProducts] =
+        useState([]);
 
-    const [category, setCategory] = useState("");
 
-    const [brand, setBrand] = useState("");
+    // =========================
+    // DỮ LIỆU DANH MỤC
+    // =========================
 
-    const [loading, setLoading] = useState(true);
+    const [categories, setCategories] =
+        useState([]);
 
-    const [error, setError] = useState("");
 
-    const [sort, setSort] = useState("");
+    // =========================
+    // DỮ LIỆU THƯƠNG HIỆU
+    // =========================
 
-    const [currentPage, setCurrentPage] = useState(1);
+    const [brands, setBrands] =
+        useState([]);
+
+
+    // =========================
+    // TỪ KHÓA TÌM KIẾM
+    // =========================
+
+    const [keyword, setKeyword] =
+        useState("");
+
+
+    // =========================
+    // DANH MỤC ĐANG CHỌN
+    // =========================
+
+    const [category, setCategory] =
+        useState("");
+
+
+    // =========================
+    // THƯƠNG HIỆU ĐANG CHỌN
+    // =========================
+
+    const [brand, setBrand] =
+        useState("");
+
+
+    // =========================
+    // KIỂU SẮP XẾP
+    // =========================
+
+    const [sort, setSort] =
+        useState("");
+
+
+    // =========================
+    // TRẠNG THÁI LOADING
+    // =========================
+
+    const [loading, setLoading] =
+        useState(true);
+
+
+    // =========================
+    // THÔNG BÁO LỖI
+    // =========================
+
+    const [error, setError] =
+        useState("");
+
+
+    // =========================
+    // TRANG HIỆN TẠI
+    // =========================
+
+    const [currentPage, setCurrentPage] =
+        useState(1);
+
+
+    // =========================
+    // SỐ SẢN PHẨM MỖI TRANG
+    // =========================
 
     const productsPerPage = 8;
 
+
+    // =========================
+    // USER ĐANG ĐĂNG NHẬP
+    // =========================
+
     const { user } = useAuth();
 
-    // ===============================
-    // LẤY DANH SÁCH SẢN PHẨM
-    // ===============================
+
+    // ==================================================
+    // 1. LẤY SẢN PHẨM TỪ BACKEND
+    // ==================================================
 
     useEffect(() => {
 
-        const fetchProducts = async () => {
+        const loadProducts = async () => {
 
             try {
 
@@ -94,19 +146,38 @@ const ProductList = () => {
 
                 setError("");
 
-                const response = await productApi.getAll();
 
-                setProducts(response.data?.data || []);
+                // Gọi API lấy sản phẩm thật từ MongoDB.
 
-            }
-            catch (error) {
+                const response =
+                    await productApi.getAll();
 
-                console.log("Lỗi lấy sản phẩm:",error);
 
-                setError("Không thể tải danh sách sản phẩm.");
+                // Backend trả:
 
-            }
-            finally {
+                // {
+                //     success: true,
+                //     data: [...]
+                // }
+
+                setProducts(
+                    response.data?.data || []
+                );
+
+
+            } catch (err) {
+
+                console.error(
+                    "Lỗi lấy sản phẩm:",
+                    err
+                );
+
+                setError(
+                    "Không thể tải danh sách sản phẩm."
+                );
+
+
+            } finally {
 
                 setLoading(false);
 
@@ -114,181 +185,448 @@ const ProductList = () => {
 
         };
 
-        fetchProducts();
+
+        loadProducts();
 
     }, []);
 
-    // ===============================
-    // LỌC + TÌM KIẾM + SẮP XẾP
-    // ===============================
 
-    const filteredProducts = [...products]
+    // ==================================================
+    // 2. LẤY DANH MỤC TỪ BACKEND
+    // ==================================================
 
-        // Tìm kiếm theo tên
-        .filter((product) => {
+    useEffect(() => {
 
-            const name =
-                product.name || "";
+        const loadCategories = async () => {
 
-            return name
-                .toLowerCase()
-                .includes(
-                    keyword.toLowerCase()
+            try {
+
+                const response =
+                    await categoryApi.getCategories();
+
+
+                // Lưu danh mục thật vào state.
+
+                setCategories(
+                    response.data?.data || []
                 );
 
-        })
 
-        // Lọc danh mục
-        .filter((product) => {
+            } catch (err) {
 
-            if (category === "") {
-
-                return true;
+                console.error(
+                    "Lỗi lấy danh mục:",
+                    err
+                );
 
             }
 
-            return (
-                product.category === category ||
-                product.category?.name === category
+        };
+
+
+        loadCategories();
+
+    }, []);
+
+
+    // ==================================================
+    // 3. LẤY THƯƠNG HIỆU TỪ BACKEND
+    // ==================================================
+
+    useEffect(() => {
+
+        const loadBrands = async () => {
+
+            try {
+
+                const response =
+                    await brandApi.getBrands();
+
+
+                // Lưu thương hiệu thật vào state.
+
+                setBrands(
+                    response.data?.data || []
+                );
+
+
+            } catch (err) {
+
+                console.error(
+                    "Lỗi lấy thương hiệu:",
+                    err
+                );
+
+            }
+
+        };
+
+
+        loadBrands();
+
+    }, []);
+
+
+    // ==================================================
+    // 4. LỌC + SẮP XẾP
+    // ==================================================
+
+    const filteredProducts =
+        useMemo(() => {
+
+            // Tạo bản sao để không thay đổi
+            // mảng products gốc.
+
+            let result = [
+                ...products
+            ];
+
+
+            // ==========================================
+            // TÌM KIẾM THEO TÊN
+            // ==========================================
+
+            if (keyword.trim()) {
+
+                const search =
+                    keyword
+                        .trim()
+                        .toLowerCase();
+
+
+                result =
+                    result.filter(
+                        (product) => {
+
+                            return (
+                                product.name ||
+                                ""
+                            )
+                                .toLowerCase()
+                                .includes(
+                                    search
+                                );
+
+                        }
+                    );
+
+            }
+
+
+            // ==========================================
+            // LỌC THEO DANH MỤC
+            // ==========================================
+
+            if (category) {
+
+                result =
+                    result.filter(
+                        (product) => {
+
+                            // Backend có thể trả category
+                            // dưới dạng Object sau populate
+                            // hoặc chỉ trả ObjectId.
+
+                            const productCategory =
+                                product.category;
+
+
+                            if (!productCategory) {
+                                return false;
+                            }
+
+
+                            // Lấy ID danh mục.
+
+                            const categoryId =
+                                typeof productCategory ===
+                                "object"
+
+                                    ? productCategory._id
+
+                                    : productCategory;
+
+
+                            // Chỉ giữ sản phẩm
+                            // thuộc danh mục được chọn.
+
+                            return (
+                                String(categoryId) ===
+                                String(category)
+                            );
+
+                        }
+                    );
+
+            }
+
+
+            // ==========================================
+            // LỌC THEO THƯƠNG HIỆU
+            // ==========================================
+
+            if (brand) {
+
+                result =
+                    result.filter(
+                        (product) => {
+
+                            const productBrand =
+                                product.brand;
+
+
+                            if (!productBrand) {
+                                return false;
+                            }
+
+
+                            // Lấy ID thương hiệu.
+
+                            const brandId =
+                                typeof productBrand ===
+                                "object"
+
+                                    ? productBrand._id
+
+                                    : productBrand;
+
+
+                            // Chỉ giữ sản phẩm
+                            // thuộc thương hiệu đã chọn.
+
+                            return (
+                                String(brandId) ===
+                                String(brand)
+                            );
+
+                        }
+                    );
+
+            }
+
+
+            // ==========================================
+            // SẮP XẾP
+            // ==========================================
+
+            result.sort(
+                (a, b) => {
+
+
+                    // --------------------------
+                    // GIÁ TĂNG DẦN
+                    // --------------------------
+
+                    if (
+                        sort ===
+                        "priceAsc"
+                    ) {
+
+                        return (
+                            Number(
+                                a.price || 0
+                            ) -
+
+                            Number(
+                                b.price || 0
+                            )
+                        );
+
+                    }
+
+
+                    // --------------------------
+                    // GIÁ GIẢM DẦN
+                    // --------------------------
+
+                    if (
+                        sort ===
+                        "priceDesc"
+                    ) {
+
+                        return (
+                            Number(
+                                b.price || 0
+                            ) -
+
+                            Number(
+                                a.price || 0
+                            )
+                        );
+
+                    }
+
+
+                    // --------------------------
+                    // TÊN A-Z
+                    // --------------------------
+
+                    if (
+                        sort ===
+                        "nameAsc"
+                    ) {
+
+                        return (
+                            a.name || ""
+                        )
+                            .localeCompare(
+                                b.name || "",
+                                "vi",
+                                {
+                                    sensitivity:
+                                        "base"
+                                }
+                            );
+
+                    }
+
+
+                    // --------------------------
+                    // TÊN Z-A
+                    // --------------------------
+
+                    if (
+                        sort ===
+                        "nameDesc"
+                    ) {
+
+                        return (
+                            b.name || ""
+                        )
+                            .localeCompare(
+                                a.name || "",
+                                "vi",
+                                {
+                                    sensitivity:
+                                        "base"
+                                }
+                            );
+
+                    }
+
+
+                    // Không chọn sắp xếp.
+
+                    return 0;
+
+                }
             );
 
-        })
 
-        // Lọc thương hiệu
-        .filter((product) => {
+            return result;
 
-            if (brand === "") {
 
-                return true;
+        }, [
 
-            }
+            // useMemo chạy lại khi
+            // một trong các giá trị này thay đổi.
 
-            return (
-                product.brand === brand ||
-                product.brand?.name === brand
-            );
+            products,
+            keyword,
+            category,
+            brand,
+            sort
 
-        })
+        ]);
 
-        // Sắp xếp
-        .sort((a, b) => {
 
-            if (sort === "priceAsc") {
-
-                return (
-                    Number(a.price || 0) -
-                    Number(b.price || 0)
-                );
-
-            }
-
-            if (sort === "priceDesc") {
-
-                return (
-                    Number(b.price || 0) -
-                    Number(a.price || 0)
-                );
-
-            }
-
-            if (sort === "nameAsc") {
-
-                return (
-                    (a.name || "").localeCompare(
-                        b.name || ""
-                    )
-                );
-
-            }
-
-            if (sort === "nameDesc") {
-
-                return (
-                    (b.name || "").localeCompare(
-                        a.name || ""
-                    )
-                );
-
-            }
-
-            return 0;
-
-        });
-
-    // ===============================
-    // PHÂN TRANG
-    // ===============================
-
-    const totalPages = Math.ceil(
-        filteredProducts.length /
-        productsPerPage
-    );
-
-    const currentProducts =
-        filteredProducts.slice(
-            (currentPage - 1) *
-                productsPerPage,
-
-            currentPage *
-                productsPerPage
-        );
-
-    // ===============================
-    // RESET TRANG KHI FILTER
-    // ===============================
+    // ==================================================
+    // 5. RESET VỀ TRANG 1 KHI ĐỔI BỘ LỌC
+    // ==================================================
 
     useEffect(() => {
 
         setCurrentPage(1);
 
     }, [
+
         keyword,
         category,
         brand,
         sort
+
     ]);
 
-    // ===============================
-    // XÓA SẢN PHẨM
-    // ===============================
+
+    // ==================================================
+    // 6. PHÂN TRANG
+    // ==================================================
+
+    const totalPages =
+        Math.ceil(
+            filteredProducts.length /
+            productsPerPage
+        );
+
+
+    const currentProducts =
+        filteredProducts.slice(
+
+            (currentPage - 1) *
+                productsPerPage,
+
+            currentPage *
+                productsPerPage
+
+        );
+
+
+    // ==================================================
+    // 7. XÓA SẢN PHẨM
+    // ==================================================
 
     const handleDelete = async (id) => {
+
+        // Hỏi xác nhận trước khi xóa.
 
         const confirmDelete =
             window.confirm(
                 "Bạn có chắc chắn muốn xóa sản phẩm này?"
             );
 
+
         if (!confirmDelete) {
-
             return;
-
         }
+
 
         try {
 
+            // Gọi API DELETE.
+
             await productApi.delete(id);
 
-            setProducts((prev) =>
-                prev.filter(
-                    (product) =>
-                        (product._id || product.id) !== id
-                )
+
+            // Xóa sản phẩm khỏi state
+            // sau khi backend thành công.
+
+            setProducts(
+                (prev) =>
+                    prev.filter(
+                        (product) =>
+                            String(
+                                product._id
+                            ) !==
+                            String(id)
+                    )
             );
+
 
             alert(
                 "Xóa sản phẩm thành công"
             );
 
-        }
-        catch (error) {
 
-            console.log(
+        } catch (err) {
+
+            console.error(
                 "Lỗi xóa sản phẩm:",
-                error
+                err
             );
 
+
             alert(
+                err?.response?.data?.message ||
                 "Xóa sản phẩm thất bại"
             );
 
@@ -296,9 +634,10 @@ const ProductList = () => {
 
     };
 
-    // ===============================
-    // LOADING
-    // ===============================
+
+    // ==================================================
+    // 8. LOADING
+    // ==================================================
 
     if (loading) {
 
@@ -316,9 +655,10 @@ const ProductList = () => {
 
     }
 
-    // ===============================
-    // ERROR
-    // ===============================
+
+    // ==================================================
+    // 9. ERROR
+    // ==================================================
 
     if (error) {
 
@@ -344,79 +684,108 @@ const ProductList = () => {
 
     }
 
-    // ===============================
-    // GIAO DIỆN
-    // ===============================
+
+    // ==================================================
+    // 10. GIAO DIỆN
+    // ==================================================
 
     return (
 
         <div className="product-list">
 
-            {/* TITLE */}
 
-            <h1>
-                Danh sách sản phẩm
-            </h1>
+            {/* =========================
+                TIÊU ĐỀ
+            ========================= */}
 
-            {/* SỐ LƯỢNG */}
+            <div className="product-header">
 
-            <p className="product-count">
+                <div>
 
-                Có{" "}
+                    <h1>
+                        Danh sách sản phẩm
+                    </h1>
 
-                <strong>
-                    {filteredProducts.length}
-                </strong>
+                    <p className="product-count">
 
-                {" "}sản phẩm
+                        Có{" "}
 
-            </p>
+                        <strong>
+                            {
+                                filteredProducts.length
+                            }
+                        </strong>
 
-            {/* ADMIN TOOLBAR */}
+                        {" "}sản phẩm
 
-            {
-                user?.role === "ADMIN" && (
+                    </p>
 
-                    <div className="toolbar">
+                </div>
 
-                        <Link
-                            to="/admin/products/create"
+
+                {/* =========================
+                    NÚT THÊM CHO ADMIN
+                ========================= */}
+
+                {user?.role
+                    ?.toUpperCase() ===
+                    "ADMIN" && (
+
+                    <Link
+                        to="/admin/products/create"
+                    >
+
+                        <button
+                            className="add-product"
                         >
+                            + Thêm sản phẩm
+                        </button>
 
-                            <button
-                                className="add-product"
-                            >
-                                + Thêm sản phẩm
-                            </button>
+                    </Link>
 
-                        </Link>
+                )}
 
-                    </div>
+            </div>
 
-                )
-            }
 
-            {/* SEARCH */}
+            {/* =========================
+                TÌM KIẾM
+            ========================= */}
 
             <ProductSearch
 
-                keyword={keyword}
+                keyword={
+                    keyword
+                }
 
-                setKeyword={setKeyword}
+                setKeyword={
+                    setKeyword
+                }
 
             />
 
-            {/* FILTER */}
+
+            {/* =========================
+                BỘ LỌC
+            ========================= */}
 
             <ProductFilter
 
-                categories={categories}
+                categories={
+                    categories
+                }
 
-                brands={brands}
+                brands={
+                    brands
+                }
 
-                selectedCategory={category}
+                selectedCategory={
+                    category
+                }
 
-                selectedBrand={brand}
+                selectedBrand={
+                    brand
+                }
 
                 onCategoryChange={
                     setCategory
@@ -428,36 +797,175 @@ const ProductList = () => {
 
             />
 
-            {/* SORT */}
 
-            <ProductSort
+            {/* =========================
+                SẮP XẾP
+            ========================= */}
 
-                sort={sort}
+            <div className="sort-wrapper">
 
-                setSort={setSort}
+                <ProductSort
 
-            />
+                    sort={
+                        sort
+                    }
 
-            {/* PRODUCT GRID */}
+                    onSortChange={
+                        setSort
+                    }
+
+                />
+
+            </div>
+
+
+            {/* =========================
+                HIỂN THỊ BỘ LỌC ĐANG DÙNG
+            ========================= */}
+
+            {(keyword ||
+                category ||
+                brand ||
+                sort) && (
+
+                <div className="active-filters">
+
+
+                    {/* Từ khóa */}
+
+                    {keyword && (
+
+                        <span>
+                            Từ khóa:{" "}
+                            {keyword}
+                        </span>
+
+                    )}
+
+
+                    {/* Danh mục */}
+
+                    {category && (
+
+                        <span>
+
+                            Danh mục:{" "}
+
+                            {
+                                categories.find(
+                                    (item) =>
+                                        String(
+                                            item._id
+                                        ) ===
+                                        String(
+                                            category
+                                        )
+                                )?.name ||
+                                "Đã chọn"
+                            }
+
+                        </span>
+
+                    )}
+
+
+                    {/* Thương hiệu */}
+
+                    {brand && (
+
+                        <span>
+
+                            Thương hiệu:{" "}
+
+                            {
+                                brands.find(
+                                    (item) =>
+                                        String(
+                                            item._id
+                                        ) ===
+                                        String(
+                                            brand
+                                        )
+                                )?.name ||
+                                "Đã chọn"
+                            }
+
+                        </span>
+
+                    )}
+
+
+                    {/* Kiểu sắp xếp */}
+
+                    {sort && (
+
+                        <span>
+
+                            Sắp xếp:{" "}
+
+                            {sort ===
+                                "priceAsc"
+                                ? "Giá tăng dần"
+
+                                : sort ===
+                                    "priceDesc"
+                                    ? "Giá giảm dần"
+
+                                    : sort ===
+                                        "nameAsc"
+                                        ? "Tên A-Z"
+
+                                        : "Tên Z-A"}
+
+                        </span>
+
+                    )}
+
+
+                    {/* Xóa toàn bộ bộ lọc */}
+
+                    <button
+                        onClick={() => {
+
+                            setKeyword("");
+                            setCategory("");
+                            setBrand("");
+                            setSort("");
+
+                        }}
+                    >
+                        Xóa bộ lọc
+                    </button>
+
+                </div>
+
+            )}
+
+
+            {/* =========================
+                DANH SÁCH SẢN PHẨM
+            ========================= */}
 
             <div className="grid">
 
-                {
-                    currentProducts.length > 0
-
-                    ?
+                {currentProducts.length > 0 ? (
 
                     currentProducts.map(
                         (product) => (
 
                             <ProductCard
 
-                                key={product._id || product.id}
+                                key={
+                                    product._id
+                                }
 
-                                product={product}
+                                product={
+                                    product
+                                }
 
                                 isAdmin={
-                                    user?.role ===
+                                    user?.role
+                                        ?.toUpperCase() ===
                                     "ADMIN"
                                 }
 
@@ -468,54 +976,52 @@ const ProductList = () => {
                             />
 
                         )
-                    )
-
-                    :
-
-                    (
-
-                        <div className="no-products">
-
-                            <h3>
-                                Không có sản phẩm
-                            </h3>
-
-                            <p>
-                                Thử thay đổi
-                                từ khóa hoặc
-                                bộ lọc.
-                            </p>
-
-                        </div>
 
                     )
-                }
+
+                ) : (
+
+                    <div className="no-products">
+
+                        <h3>
+                            Không có sản phẩm
+                        </h3>
+
+                        <p>
+                            Không tìm thấy sản phẩm
+                            phù hợp với bộ lọc hiện tại.
+                        </p>
+
+                    </div>
+
+                )}
 
             </div>
 
-            {/* PAGINATION */}
 
-            {
-                totalPages > 0 && (
+            {/* =========================
+                PHÂN TRANG
+            ========================= */}
 
-                    <Pagination
+            {totalPages > 1 && (
 
-                        currentPage={
-                            currentPage
-                        }
+                <Pagination
 
-                        totalPages={
-                            totalPages
-                        }
+                    currentPage={
+                        currentPage
+                    }
 
-                        setCurrentPage={
-                            setCurrentPage
-                        }
+                    totalPages={
+                        totalPages
+                    }
 
-                    />
+                    onPageChange={
+                        setCurrentPage
+                    }
 
-                )
-            }
+                />
+
+            )}
 
         </div>
 
