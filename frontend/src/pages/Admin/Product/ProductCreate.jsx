@@ -1,225 +1,96 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import productApi from "../../../api/productApi";
-
+import categoryApi from "../../../api/categoryApi";
+import brandApi from "../../../api/brandApi";
 import "./ProductCreate.css";
 
 const ProductCreate = () => {
-
     const navigate = useNavigate();
 
-    const [product,setProduct] = useState({
-
-        name:"",
-
-        price:"",
-
-        category:"",
-
-        brand:"",
-
-        image:"",
-
-        description:""
-
+    const [product, setProduct] = useState({
+        name: "", price: "", stock: "", category: "", brand: "", image: "", description: ""
     });
+    const [categories, setCategories] = useState([]);
+    const [brands, setBrands] = useState([]);
+    const [loading, setLoading] = useState(false);
 
-    const handleChange = (e)=>{
+    // Lấy danh mục và thương hiệu thật từ MongoDB
+    useEffect(() => {
+        const loadOptions = async () => {
+            try {
+                const [categoryRes, brandRes] = await Promise.all([
+                    categoryApi.getCategories(),
+                    brandApi.getBrands()
+                ]);
+                setCategories(categoryRes.data?.data || []);
+                setBrands(brandRes.data?.data || []);
+            } catch (error) {
+                console.error("Lỗi lấy danh mục/thương hiệu:", error);
+            }
+        };
+        loadOptions();
+    }, []);
 
-        setProduct({
-
-            ...product,
-
-            [e.target.name]:e.target.value
-
-        });
-
+    const handleChange = (e) => {
+        setProduct((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
-    
-    const handleSubmit = async(e)=>{
 
+    // Gửi sản phẩm thật xuống backend
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
-        try{
-
-            const response = await productApi.create(product);
-
-            console.log(response.data);
-
-            alert(  
-                "Thêm sản phẩm thành công"
-            );
-
+        try {
+            setLoading(true);
+            await productApi.create({
+                ...product,
+                price: Number(product.price),
+                stock: Number(product.stock)
+            });
+            alert("Thêm sản phẩm thành công");
             navigate("/admin/products");
-
+        } catch (error) {
+            console.error("Lỗi thêm sản phẩm:", error);
+            alert(error?.response?.data?.message || "Thêm sản phẩm thất bại");
+        } finally {
+            setLoading(false);
         }
-        catch(error){
-
-            console.log(
-                "Lỗi thêm sản phẩm:",
-                error
-            );
-
-            alert(
-                "Thêm sản phẩm thất bại"
-            );
-
-        }
-
     };
+
     return (
-
         <div className="product-create">
-
-            <h1>
-
-                Thêm sản phẩm
-
-            </h1>
-
+            <h1>Thêm sản phẩm</h1>
             <form onSubmit={handleSubmit}>
+                <label>Tên sản phẩm</label>
+                <input name="name" value={product.name} onChange={handleChange} placeholder="Nhập tên sản phẩm" />
 
-                <label>
-                    Tên sản phẩm
-                </label>
+                <label>Giá</label>
+                <input name="price" type="number" min="0" value={product.price} onChange={handleChange} placeholder="Nhập giá" />
 
-                <input
+                <label>Tồn kho</label>
+                <input name="stock" type="number" min="0" value={product.stock} onChange={handleChange} placeholder="Nhập số lượng tồn kho" />
 
-                    name="name"
-
-                    value={product.name}
-
-                    onChange={handleChange}
-
-                    placeholder="Nhập tên sản phẩm"
-
-                />
-
-                <label>
-                    Giá
-                </label>
-
-                <input
-
-                    name="price"
-
-                    type="number"
-
-                    value={product.price}
-
-                    onChange={handleChange}
-
-                    placeholder="Nhập giá"
-
-                />
-
-                <label>
-                    Danh mục
-                </label>
-
-                <select
-
-                    name="category"
-
-                    value={product.category}
-
-                    onChange={handleChange}
-
-                >
-
-                    <option value="">
-                        Chọn danh mục
-                    </option>
-
-                    <option value="CPU">
-                        CPU
-                    </option>
-
-                    <option value="GPU">
-                        GPU
-                    </option>
-
-                    <option value="RAM">
-                        RAM
-                    </option>
-
+                <label>Danh mục</label>
+                <select name="category" value={product.category} onChange={handleChange}>
+                    <option value="">Chọn danh mục</option>
+                    {categories.map((item) => <option key={item._id} value={item._id}>{item.name}</option>)}
                 </select>
 
-                <label>
-                    Thương hiệu
-                </label>
-
-                <select
-
-                    name="brand"
-
-                    value={product.brand}
-
-                    onChange={handleChange}
-
-                >
-
-                    <option value="">
-                        Chọn thương hiệu
-                    </option>
-
-                    <option value="Intel">
-                        Intel
-                    </option>
-
-                    <option value="AMD">
-                        AMD
-                    </option>
-
-                    <option value="NVIDIA">
-                        NVIDIA
-                    </option>
-
+                <label>Thương hiệu</label>
+                <select name="brand" value={product.brand} onChange={handleChange}>
+                    <option value="">Chọn thương hiệu</option>
+                    {brands.map((item) => <option key={item._id} value={item._id}>{item.name}</option>)}
                 </select>
 
-                <label>
-                    Link hình ảnh
-                </label>
+                <label>Link hình ảnh</label>
+                <input name="image" value={product.image} onChange={handleChange} placeholder="URL hình ảnh" />
 
-                <input
+                <label>Mô tả</label>
+                <textarea name="description" value={product.description} onChange={handleChange} />
 
-                    name="image"
-
-                    value={product.image}
-
-                    onChange={handleChange}
-
-                    placeholder="URL hình ảnh"
-
-                />
-
-                <label>
-                    Mô tả
-                </label>
-
-                <textarea
-
-                    name="description"
-
-                    value={product.description}
-
-                    onChange={handleChange}
-
-                />
-
-                <button type="submit">
-
-                    Lưu sản phẩm
-
-                </button>
-
+                <button type="submit" disabled={loading}>{loading ? "Đang lưu..." : "Lưu sản phẩm"}</button>
             </form>
-
         </div>
-
     );
-
 };
 
 export default ProductCreate;

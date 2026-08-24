@@ -7,31 +7,47 @@ import { updateProfile } from "../../services/userService";
 import "./Profile.css";
 
 const Profile = () => {
-    const { user } = useAuth();
+    const { user, updateUser } = useAuth();
 
     const [formData, setFormData] = useState({
         fullName: user?.fullName || "",
         email: user?.email || "",
-        phone: user?.phone || "",
+        phone: user?.phone || ""
     });
+
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         setFormData((prev) => ({
             ...prev,
-            [e.target.name]: e.target.value,
+            [e.target.name]: e.target.value
         }));
     };
 
+    // Lưu thông tin profile vào MongoDB và cập nhật Context
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
+            setLoading(true);
             const result = await updateProfile(formData);
-            console.log(result);
+
+            if (!result?.success) {
+                throw new Error(result?.message || "Cập nhật thất bại");
+            }
+
+            updateUser(result.data);
+            setFormData({
+                fullName: result.data.fullName || "",
+                email: result.data.email || "",
+                phone: result.data.phone || ""
+            });
+
             alert("Cập nhật thành công");
         } catch (error) {
-            console.log(error);
-            alert("Cập nhật thất bại");
+            alert(error?.response?.data?.message || error?.message || "Cập nhật thất bại");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -42,9 +58,7 @@ const Profile = () => {
                     <div>
                         <p className="profile-eyebrow">TÀI KHOẢN</p>
                         <h1>Thông tin cá nhân</h1>
-                        <p className="profile-subtitle">
-                            Quản lý thông tin tài khoản và hồ sơ của bạn.
-                        </p>
+                        <p className="profile-subtitle">Quản lý thông tin tài khoản và hồ sơ của bạn.</p>
                     </div>
                     <div className="profile-user-badge">PC</div>
                 </div>
@@ -56,40 +70,20 @@ const Profile = () => {
                 <form className="profile-form" onSubmit={handleSubmit}>
                     <div className="profile-form-grid">
                         <div className="profile-field">
-                            <Input
-                                label="Họ tên"
-                                name="fullName"
-                                value={formData.fullName}
-                                onChange={handleChange}
-                            />
+                            <Input label="Họ tên" name="fullName" value={formData.fullName} onChange={handleChange} />
                         </div>
-
                         <div className="profile-field">
-                            <Input
-                                label="Email"
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                            />
+                            <Input label="Email" type="email" name="email" value={formData.email} onChange={handleChange} />
                         </div>
-
                         <div className="profile-field profile-field-full">
-                            <Input
-                                label="Số điện thoại"
-                                type="tel"
-                                name="phone"
-                                value={formData.phone}
-                                onChange={handleChange}
-                                placeholder="Nhập số điện thoại"
-                            />
+                            <Input label="Số điện thoại" type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="Nhập số điện thoại" />
                         </div>
                     </div>
 
                     <div className="profile-form-footer">
                         <p>Thông tin sẽ được cập nhật vào tài khoản của bạn.</p>
                         <div className="profile-submit">
-                            <Button type="submit" text="Lưu thay đổi" />
+                            <Button type="submit" text={loading ? "Đang lưu..." : "Lưu thay đổi"} loading={loading} />
                         </div>
                     </div>
                 </form>

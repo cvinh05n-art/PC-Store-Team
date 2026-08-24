@@ -24,6 +24,7 @@ import Cart from "../pages/Cart/Cart";
 import Checkout from "../pages/Order/Checkout";
 import OrderHistory from "../pages/Order/OrderHistory";
 
+import CategoryList from "../pages/Category/CategoryList";
 import CategoryForm from "../pages/Category/CategoryForm";
 
 import BrandList from "../pages/brand/BrandList";
@@ -237,6 +238,15 @@ const AppRoutes = () => {
                 />
 
                 {/* CATEGORY */}
+
+                <Route
+                    path="/admin/categories"
+                    element={
+                        <ProtectedRoute role="ADMIN">
+                            <CategoryList />
+                        </ProtectedRoute>
+                    }
+                />
 
                 <Route
                     path="/admin/categories/create"

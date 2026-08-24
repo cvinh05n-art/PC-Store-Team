@@ -48,7 +48,7 @@ const OrderManagement = () => {
 
             ? {
                 ...order,
-                status
+                orderStatus: status
             }
 
             : order
