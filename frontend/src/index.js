@@ -5,10 +5,25 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./index.css";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+import { AuthProvider } from "./contexts/AuthContext";
+import { CartProvider } from "./contexts/CartContext";
+
+const root = ReactDOM.createRoot(
+    document.getElementById("root")
+);
 
 root.render(
     <BrowserRouter>
-        <App />
+
+        <AuthProvider>
+
+            <CartProvider>
+
+                <App />
+
+            </CartProvider>
+
+        </AuthProvider>
+
     </BrowserRouter>
 );

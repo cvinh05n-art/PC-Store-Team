@@ -5,13 +5,18 @@ import {
     useState
 } from "react";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
+
+
+    // =========================
+    // KIỂM TRA SESSION KHI MỞ APP
+    // =========================
 
     useEffect(() => {
 
@@ -22,7 +27,8 @@ export const AuthProvider = ({ children }) => {
 
             try {
 
-                const parsedUser = JSON.parse(userData);
+                const parsedUser =
+                    JSON.parse(userData);
 
                 setUser(parsedUser);
                 setIsAuthenticated(true);
@@ -37,7 +43,14 @@ export const AuthProvider = ({ children }) => {
                 localStorage.removeItem("token");
                 localStorage.removeItem("user");
 
+                setUser(null);
+                setIsAuthenticated(false);
             }
+
+        } else {
+
+            setUser(null);
+            setIsAuthenticated(false);
 
         }
 
@@ -45,15 +58,17 @@ export const AuthProvider = ({ children }) => {
 
     }, []);
 
+
+    // =========================
+    // LOGIN
+    // =========================
+
     const login = (userData, token) => {
 
-        console.log("LOGIN USER:", userData);
-        console.log("LOGIN TOKEN:", token);
-
-        if (!token) {
+        if (!token || !userData) {
 
             console.error(
-                "Không nhận được token!"
+                "Login thất bại: thiếu token hoặc user"
             );
 
             return false;
@@ -69,11 +84,19 @@ export const AuthProvider = ({ children }) => {
             JSON.stringify(userData)
         );
 
+        // CỰC KỲ QUAN TRỌNG
+        // Cập nhật Context ngay lập tức
+
         setUser(userData);
         setIsAuthenticated(true);
 
         return true;
     };
+
+
+    // =========================
+    // LOGOUT
+    // =========================
 
     const logout = () => {
 
@@ -84,6 +107,7 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(false);
 
     };
+
 
     return (
 
@@ -102,8 +126,20 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
 
     );
-
 };
 
-export const useAuth = () =>
-    useContext(AuthContext);
+
+export const useAuth = () => {
+
+    const context = useContext(AuthContext);
+
+    if (!context) {
+
+        throw new Error(
+            "useAuth phải được sử dụng bên trong AuthProvider"
+        );
+
+    }
+
+    return context;
+};

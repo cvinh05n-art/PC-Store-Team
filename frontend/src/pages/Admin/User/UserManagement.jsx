@@ -1,167 +1,382 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import userApi from "../../../api/userApi";
 import "./UserManagement.css";
 
 const UserManagement = () => {
 
-    const [users, setUsers] = useState([
-        {
-            id: 1,
-            name: "Nguyễn Văn A",
-            email: "a@gmail.com",
-            role: "USER",
-            status: "Hoạt động"
-        },
-        {
-            id: 2,
-            name: "Trần Văn B",
-            email: "b@gmail.com",
-            role: "ADMIN",
-            status: "Hoạt động"
-        },
-        {
-            id: 3,
-            name: "Lê Văn C",
-            email: "c@gmail.com",
-            role: "USER",
-            status: "Khóa"
-        }
-    ]);
+    const [users, setUsers] = useState([]);
 
     const [search, setSearch] = useState("");
+
+    const [loading, setLoading] = useState(true);
+
+    const [saving, setSaving] = useState(false);
+
+    const [error, setError] = useState("");
 
     const [newUser, setNewUser] = useState({
         name: "",
         email: "",
+        password: "",
         role: "USER"
     });
 
-    // ==========================
-    // Tìm kiếm
-    // ==========================
 
-    const filteredUsers = users.filter(
-        (user) =>
-            user.name.toLowerCase().includes(search.toLowerCase()) ||
-            user.email.toLowerCase().includes(search.toLowerCase())
-    );
+    // =========================
+    // LOAD USERS
+    // =========================
 
-    // ==========================
-    // Thêm User
-    // ==========================
+    const loadUsers = async () => {
 
-    const addUser = () => {
+        try {
 
-        if (!newUser.name || !newUser.email) {
+            setLoading(true);
+            setError("");
 
-            alert("Vui lòng nhập đầy đủ thông tin");
+            const response =
+                await userApi.getUsers(search);
+
+            const result =
+                response.data;
+
+            if (!result.success) {
+                throw new Error(
+                    result.message ||
+                    "Không thể lấy danh sách người dùng"
+                );
+            }
+
+            setUsers(
+                Array.isArray(result.data)
+                    ? result.data
+                    : []
+            );
+
+        } catch (err) {
+
+            console.error(
+                "Load users error:",
+                err
+            );
+
+            setError(
+                err?.response?.data?.message ||
+                err?.message ||
+                "Không thể tải danh sách người dùng"
+            );
+
+        } finally {
+
+            setLoading(false);
+
+        }
+    };
+
+
+    // =========================
+    // LOAD FIRST TIME
+    // =========================
+
+    useEffect(() => {
+
+        loadUsers();
+
+    }, []);
+
+
+    // =========================
+    // SEARCH
+    // =========================
+
+    const handleSearch = async (e) => {
+
+        e.preventDefault();
+
+        await loadUsers();
+
+    };
+
+
+    // =========================
+    // ADD USER
+    // =========================
+
+    const addUser = async () => {
+
+        if (
+            !newUser.name.trim() ||
+            !newUser.email.trim() ||
+            !newUser.password
+        ) {
+
+            alert(
+                "Vui lòng nhập họ tên, email và mật khẩu"
+            );
 
             return;
-
         }
 
-        setUsers([
-            ...users,
-            {
-                id: Date.now(),
-                ...newUser,
-                status: "Hoạt động"
+        try {
+
+            setSaving(true);
+
+            const response =
+                await userApi.createUser({
+                    name:
+                        newUser.name.trim(),
+                    email:
+                        newUser.email.trim(),
+                    password:
+                        newUser.password,
+                    role:
+                        newUser.role
+                });
+
+            const result =
+                response.data;
+
+            if (!result.success) {
+
+                throw new Error(
+                    result.message ||
+                    "Không thể tạo người dùng"
+                );
             }
-        ]);
 
-        setNewUser({
-            name: "",
-            email: "",
-            role: "USER"
-        });
+            alert(
+                "Tạo người dùng thành công"
+            );
 
-    };
+            setNewUser({
+                name: "",
+                email: "",
+                password: "",
+                role: "USER"
+            });
 
-    // ==========================
-    // Khóa / Mở khóa
-    // ==========================
+            await loadUsers();
 
-    const handleStatus = (id) => {
+        } catch (err) {
 
-        setUsers(
+            alert(
+                err?.response?.data?.message ||
+                err?.message ||
+                "Không thể tạo người dùng"
+            );
 
-            users.map(user =>
+        } finally {
 
-                user.id === id
-                    ? {
-                        ...user,
-                        status:
-                            user.status === "Hoạt động"
-                                ? "Khóa"
-                                : "Hoạt động"
-                    }
-                    : user
-
-            )
-
-        );
-
-    };
-
-    // ==========================
-    // Xóa User
-    // ==========================
-
-    const deleteUser = (id) => {
-
-        if (window.confirm("Bạn có chắc muốn xóa người dùng?")) {
-
-            setUsers(users.filter(user => user.id !== id));
+            setSaving(false);
 
         }
-
     };
 
-    // ==========================
-    // Sửa User
-    // ==========================
 
-    const editUser = (user) => {
+    // =========================
+    // EDIT USER
+    // =========================
 
-        const name = prompt("Nhập họ tên:", user.name);
+    const editUser = async (user) => {
 
-        if (!name) return;
+        const name =
+            window.prompt(
+                "Nhập họ tên:",
+                user.name
+            );
 
-        const email = prompt("Nhập email:", user.email);
+        if (!name || !name.trim()) {
+            return;
+        }
 
-        if (!email) return;
+        const email =
+            window.prompt(
+                "Nhập email:",
+                user.email
+            );
 
-        const role = prompt("Role (USER hoặc ADMIN):", user.role);
+        if (!email || !email.trim()) {
+            return;
+        }
 
-        if (!role) return;
+        const role =
+            window.prompt(
+                "Role (USER hoặc ADMIN):",
+                user.role
+            );
 
-        setUsers(
+        if (!role) {
+            return;
+        }
 
-            users.map(item =>
+        try {
 
-                item.id === user.id
-
-                    ? {
-                        ...item,
-                        name,
-                        email,
-                        role
+            const response =
+                await userApi.updateUser(
+                    user.id,
+                    {
+                        name: name.trim(),
+                        email: email.trim(),
+                        role: role.toUpperCase()
                     }
+                );
 
-                    : item
+            const result =
+                response.data;
 
-            )
+            if (!result.success) {
 
-        );
+                throw new Error(
+                    result.message ||
+                    "Không thể cập nhật user"
+                );
+            }
 
+            await loadUsers();
+
+        } catch (err) {
+
+            alert(
+                err?.response?.data?.message ||
+                err?.message ||
+                "Không thể cập nhật user"
+            );
+
+        }
     };
+
+
+    // =========================
+    // LOCK / UNLOCK
+    // =========================
+
+    const handleStatus = async (user) => {
+
+        const action =
+            user.status
+                ? "khóa"
+                : "mở khóa";
+
+        const confirmed =
+            window.confirm(
+                `Bạn có chắc muốn ${action} tài khoản ${user.email}?`
+            );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+
+            const response =
+                await userApi.toggleUserStatus(
+                    user.id
+                );
+
+            const result =
+                response.data;
+
+            if (!result.success) {
+
+                throw new Error(
+                    result.message ||
+                    "Không thể thay đổi trạng thái"
+                );
+            }
+
+            await loadUsers();
+
+        } catch (err) {
+
+            alert(
+                err?.response?.data?.message ||
+                err?.message ||
+                "Không thể thay đổi trạng thái"
+            );
+
+        }
+    };
+
+
+    // =========================
+    // DELETE
+    // =========================
+
+    const deleteUser = async (user) => {
+
+        const confirmed =
+            window.confirm(
+                `Bạn có chắc muốn xóa ${user.email}?`
+            );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+
+            const response =
+                await userApi.deleteUser(
+                    user.id
+                );
+
+            const result =
+                response.data;
+
+            if (!result.success) {
+
+                throw new Error(
+                    result.message ||
+                    "Không thể xóa user"
+                );
+            }
+
+            await loadUsers();
+
+        } catch (err) {
+
+            alert(
+                err?.response?.data?.message ||
+                err?.message ||
+                "Không thể xóa user"
+            );
+
+        }
+    };
+
 
     return (
 
         <div className="user-management">
 
-            <h1>Quản lý người dùng</h1>
+            <div className="user-management-header">
 
-            {/* Form thêm User */}
+                <div>
+
+                    <p className="user-eyebrow">
+                        ADMIN
+                    </p>
+
+                    <h1>
+                        Quản lý người dùng
+                    </h1>
+
+                    <p>
+                        Quản lý tài khoản, quyền và
+                        trạng thái người dùng.
+                    </p>
+
+                </div>
+
+                <div className="user-total">
+                    {users.length} tài khoản
+                </div>
+
+            </div>
+
+
+            {/* =========================
+                ADD USER
+            ========================= */}
 
             <div className="add-user">
 
@@ -189,6 +404,18 @@ const UserManagement = () => {
                     }
                 />
 
+                <input
+                    type="password"
+                    placeholder="Mật khẩu"
+                    value={newUser.password}
+                    onChange={(e) =>
+                        setNewUser({
+                            ...newUser,
+                            password: e.target.value
+                        })
+                    }
+                />
+
                 <select
                     value={newUser.role}
                     onChange={(e) =>
@@ -198,105 +425,241 @@ const UserManagement = () => {
                         })
                     }
                 >
-                    <option value="USER">USER</option>
-                    <option value="ADMIN">ADMIN</option>
+
+                    <option value="USER">
+                        USER
+                    </option>
+
+                    <option value="ADMIN">
+                        ADMIN
+                    </option>
+
                 </select>
 
-                <button onClick={addUser}>
-                    Thêm User
+                <button
+                    onClick={addUser}
+                    disabled={saving}
+                >
+                    {saving
+                        ? "Đang thêm..."
+                        : "Thêm User"
+                    }
                 </button>
 
             </div>
 
-            {/* Tìm kiếm */}
 
-            <input
-                type="text"
-                placeholder="Tìm kiếm theo tên hoặc email..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="search-box"
-            />
+            {/* =========================
+                SEARCH
+            ========================= */}
 
-            <table>
+            <form
+                className="user-search"
+                onSubmit={handleSearch}
+            >
 
-                <thead>
+                <input
+                    type="text"
+                    placeholder="Tìm theo tên hoặc email..."
+                    value={search}
+                    onChange={(e) =>
+                        setSearch(e.target.value)
+                    }
+                />
 
-                    <tr>
+                <button type="submit">
+                    Tìm kiếm
+                </button>
 
-                        <th>ID</th>
-                        <th>Họ tên</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Trạng thái</th>
-                        <th>Thao tác</th>
+                <button
+                    type="button"
+                    onClick={() => {
+                        setSearch("");
+                        loadUsers();
+                    }}
+                >
+                    Làm mới
+                </button>
 
-                    </tr>
+            </form>
 
-                </thead>
 
-                <tbody>
+            {/* =========================
+                ERROR
+            ========================= */}
 
-                    {
+            {error && (
 
-                        filteredUsers.map(user => (
+                <div className="user-error">
+                    {error}
+                </div>
 
-                            <tr key={user.id}>
+            )}
 
-                                <td>{user.id}</td>
 
-                                <td>{user.name}</td>
+            {/* =========================
+                TABLE
+            ========================= */}
 
-                                <td>{user.email}</td>
+            <div className="user-table-wrapper">
 
-                                <td>{user.role}</td>
+                <table>
 
-                                <td>{user.status}</td>
+                    <thead>
 
-                                <td>
+                        <tr>
 
-                                    <button
-                                        onClick={() => editUser(user)}
-                                    >
-                                        Sửa
-                                    </button>
+                            <th>ID</th>
+                            <th>Họ tên</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
 
-                                    {" "}
+                        </tr>
 
-                                    <button
-                                        onClick={() => deleteUser(user.id)}
-                                    >
-                                        Xóa
-                                    </button>
+                    </thead>
 
-                                    {" "}
+                    <tbody>
 
-                                    <button
-                                        onClick={() => handleStatus(user.id)}
-                                    >
-                                        {
-                                            user.status === "Hoạt động"
-                                                ? "Khóa"
-                                                : "Mở khóa"
-                                        }
-                                    </button>
+                        {loading ? (
 
+                            <tr>
+
+                                <td
+                                    colSpan="6"
+                                    className="user-loading"
+                                >
+                                    Đang tải dữ liệu...
                                 </td>
 
                             </tr>
 
-                        ))
+                        ) : users.length === 0 ? (
 
-                    }
+                            <tr>
 
-                </tbody>
+                                <td
+                                    colSpan="6"
+                                    className="user-empty"
+                                >
+                                    Chưa có người dùng.
+                                </td>
 
-            </table>
+                            </tr>
+
+                        ) : (
+
+                            users.map((user) => (
+
+                                <tr
+                                    key={user.id}
+                                >
+
+                                    <td>
+                                        {String(
+                                            user.id
+                                        ).slice(-6)}
+                                    </td>
+
+                                    <td>
+                                        {user.name}
+                                    </td>
+
+                                    <td>
+                                        {user.email}
+                                    </td>
+
+                                    <td>
+
+                                        <span
+                                            className={
+                                                user.role === "ADMIN"
+                                                    ? "role-admin"
+                                                    : "role-user"
+                                            }
+                                        >
+                                            {user.role}
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        <span
+                                            className={
+                                                user.status
+                                                    ? "status-active"
+                                                    : "status-locked"
+                                            }
+                                        >
+                                            {user.status
+                                                ? "Hoạt động"
+                                                : "Khóa"
+                                            }
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        <div className="user-actions">
+
+                                            <button
+                                                className="edit-btn"
+                                                onClick={() =>
+                                                    editUser(
+                                                        user
+                                                    )
+                                                }
+                                            >
+                                                Sửa
+                                            </button>
+
+                                            <button
+                                                className="delete-btn"
+                                                onClick={() =>
+                                                    deleteUser(
+                                                        user
+                                                    )
+                                                }
+                                            >
+                                                Xóa
+                                            </button>
+
+                                            <button
+                                                className="status-btn"
+                                                onClick={() =>
+                                                    handleStatus(
+                                                        user
+                                                    )
+                                                }
+                                            >
+                                                {user.status
+                                                    ? "Khóa"
+                                                    : "Mở khóa"
+                                                }
+                                            </button>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            ))
+
+                        )}
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </div>
 
     );
-
 };
 
 export default UserManagement;
