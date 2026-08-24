@@ -24,6 +24,7 @@ import CategoryForm from "../pages/Category/CategoryForm";
 
 import BrandList from "../pages/brand/BrandList";
 import BrandForm from "../pages/brand/BrandForm";
+import BrandView from "../pages/brand/BrandView";
 
 import Dashboard from "../pages/Admin/Dashboard";
 
@@ -224,7 +225,7 @@ const AppRoutes = () => {
 
                 <Route
                     path="/brands"
-                    element={<BrandList />}
+                    element={<BrandView />}
                 />
 
                 {/* CATEGORY */}

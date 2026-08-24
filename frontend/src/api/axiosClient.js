@@ -1,42 +1,51 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
+  baseURL: "http://localhost:5000/api",
 
-    baseURL:"http://localhost:5000/api",
-
-    headers:{
-
-        "Content-Type":"application/json"
-
-    }
-
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// tự động gắn token
+// =========================
+// REQUEST INTERCEPTOR
+// Tự động gắn JWT
+// =========================
 
 axiosClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
 
-    (config)=>{
-
-        const token = localStorage.getItem("token");
-
-        if(token){
-
-            config.headers.Authorization =
-            `Bearer ${token}`;
-
-        }
-
-        return config;
-
-    },
-
-    (error)=>{
-
-        return Promise.reject(error);
-
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
 
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+
+// =========================
+// RESPONSE INTERCEPTOR
+// =========================
+
+axiosClient.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+    }
+
+    return Promise.reject(error);
+  }
 );
 
 export default axiosClient;

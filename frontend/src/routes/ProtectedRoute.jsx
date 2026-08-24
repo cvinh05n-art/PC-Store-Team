@@ -1,8 +1,12 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 import { useAuth } from "../contexts/AuthContext";
 
-const ProtectedRoute = ({ children, role }) => {
+
+const ProtectedRoute = ({
+    children,
+    role
+}) => {
 
     const {
         user,
@@ -10,45 +14,88 @@ const ProtectedRoute = ({ children, role }) => {
         isAuthenticated
     } = useAuth();
 
+    const location = useLocation();
+
+
+    // =========================
+    // ĐANG KIỂM TRA SESSION
+    // =========================
+
     if (loading) {
 
         return (
-            <div>
-                Loading...
+            <div
+                style={{
+                    minHeight: "100vh",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center"
+                }}
+            >
+                Đang kiểm tra đăng nhập...
             </div>
         );
 
     }
 
-    if (!isAuthenticated) {
 
+    // =========================
+    // CHƯA LOGIN
+    // =========================
+
+    if (!isAuthenticated) {
 
         return (
 
             <Navigate
                 to="/login"
                 replace
+                state={{
+                    from: location.pathname
+                }}
             />
 
         );
 
     }
 
-    if (role && user?.role !== role) {
+
+    // =========================
+    // CHECK ROLE
+    // =========================
+
+    if (role) {
+
+        const userRole =
+            user?.role?.toUpperCase();
+
+        const requiredRole =
+            role.toUpperCase();
 
 
-        return (
+        if (userRole !== requiredRole) {
 
-            <Navigate
-                to="/"
-                replace
-            />
+            return (
 
-        );
+                <Navigate
+                    to="/"
+                    replace
+                />
+
+            );
+
+        }
 
     }
+
+
+    // =========================
+    // OK
+    // =========================
 
     return children;
+
 };
+
 
 export default ProtectedRoute;

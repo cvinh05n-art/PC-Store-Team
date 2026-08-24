@@ -2,31 +2,84 @@ import axiosClient from "./axiosClient";
 
 const userApi = {
 
-    getProfile(){
+    getUsers(search = "") {
+
+        return axiosClient.get(
+            "/users",
+            {
+                params: {
+                    search
+                }
+            }
+        );
+    },
+
+
+    createUser(data) {
+
+        return axiosClient.post(
+            "/users",
+            data
+        );
+    },
+
+
+    updateUser(id, data) {
+
+        return axiosClient.put(
+            `/users/${id}`,
+            data
+        );
+    },
+
+
+    toggleUserStatus(id) {
+
+        return axiosClient.patch(
+            `/users/${id}/status`
+        );
+    },
+
+
+    deleteUser(id) {
+
+        return axiosClient.delete(
+            `/users/${id}`
+        );
+    },
+
+
+    getProfile() {
+
         return axiosClient.get(
             "/auth/profile"
         );
     },
 
-    updateProfile(data){
+
+    updateProfile(data) {
+
         return axiosClient.put(
             "/auth/profile",
             data
         );
     },
 
-    uploadAvatar(data){
+
+    uploadAvatar(data) {
+
         return axiosClient.post(
             "/users/avatar",
             data,
             {
-                headers:{
+                headers: {
                     "Content-Type":
-                    "multipart/form-data"
+                        "multipart/form-data"
                 }
             }
         );
     }
+
 };
 
 export default userApi;
