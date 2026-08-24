@@ -8,12 +8,7 @@ const OrderHistory = ()=>{
     const fetchOrders = async () => {
         try {
             const response = await orderApi.getMyOrders();
-                console.log("ORDERS RESPONSE:", response.data);
-                setOrders(
-                    Array.isArray(response.data)
-                        ? response.data
-                        : response.data?.data || []
-                    );
+            setOrders(response.data?.data || []);
         }
         catch (error) {
             console.log(
@@ -51,15 +46,15 @@ const OrderHistory = ()=>{
                 Lịch sử đơn hàng
             </h1>
             {
-                Array.isArray(orders) && orders.map((order) => (
+                orders.map(order=>(
                     <div
                         className="order-card"
-                        key={order.id}
+                        key={order._id || order.id}
                     >
                         <h3>
                             Mã đơn:
                             {" "}
-                            {order.id}
+                            {order._id || order.id}
                         </h3>
                         <p>
                             Ngày đặt:
@@ -75,12 +70,12 @@ const OrderHistory = ()=>{
                         <p>
                             Tổng tiền:
                             {" "}
-                            {Number(order.totalPrice).toLocaleString()} đ
+                            {Number(order.totalAmount).toLocaleString()} đ
                             </p>
                         <p>
                             Trạng thái:
                             {" "}
-                            {order.status}
+                            {order.orderStatus}
                         </p>
                     </div>
                 ))

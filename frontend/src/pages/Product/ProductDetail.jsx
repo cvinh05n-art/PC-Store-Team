@@ -13,7 +13,7 @@ const [loading,setLoading] = useState(true);
         const fetchProduct = async()=>{
             try{
                 const response = await productApi.getById(id);
-                setProduct(response.data);
+                setProduct(response.data?.data || null);
             }
             catch(error){
                 console.log(

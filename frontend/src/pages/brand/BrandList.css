@@ -1,11 +1,21 @@
 .brand-list{
+
     padding:40px;
+
 }
+
 .add-btn{
+
     padding:10px 20px;
+
     margin:20px 0;
+
     background:#2e7d32;
+
     color:white;
+
     border:none;
+
     cursor:pointer;
+
 }

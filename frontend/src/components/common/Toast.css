@@ -12,12 +12,15 @@
     z-index:9999;
     animation:slideIn .3s ease;
 }
+
 .toast-success{
     background:#2e7d32;
 }
+
 .toast-error{
     background:#d32f2f;
 }
+
 .toast button{
     background:transparent;
     border:none;
@@ -27,6 +30,7 @@
     width:auto;
     padding:0;
 }
+
 @keyframes slideIn{
     from{
         transform:translateX(100%);
