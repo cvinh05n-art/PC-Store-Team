@@ -3,9 +3,9 @@ const User = require("../models/user.model");
 
 const userService = {
 
-    // =========================
+    // =====================================================
     // LẤY DANH SÁCH USER
-    // =========================
+    // =====================================================
 
     async getUsers(search = "") {
 
@@ -51,9 +51,9 @@ const userService = {
     },
 
 
-    // =========================
+    // =====================================================
     // TẠO USER
-    // =========================
+    // =====================================================
 
     async createUser(
         name,
@@ -112,9 +112,129 @@ const userService = {
     },
 
 
-    // =========================
+    // =====================================================
+    // CẬP NHẬT PROFILE
+    // =====================================================
+    // USER và ADMIN đều có thể sử dụng.
+    //
+    // Không nhận ID từ URL.
+    // ID lấy từ token đăng nhập thông qua req.user.id.
+    //
+    // Các thông tin được phép cập nhật:
+    // - name
+    // - phone
+    // - address
+    // - avatar
+    //
+    // Không cho sửa:
+    // - role
+    // - status
+    // - password
+    //
+    // Mục đích là tránh việc người dùng tự nâng quyền
+    // ADMIN hoặc tự thay đổi trạng thái tài khoản.
+    // =====================================================
+
+    async updateProfile(
+        id,
+        data
+    ) {
+
+        // Tìm đúng tài khoản đang đăng nhập
+        const user =
+            await User.findById(id);
+
+        if (!user) {
+
+            throw new Error(
+                "Không tìm thấy người dùng"
+            );
+
+        }
+
+
+        // ---------------------------------------------
+        // CẬP NHẬT HỌ TÊN
+        // ---------------------------------------------
+
+        if (data.name !== undefined) {
+
+            const name =
+                String(data.name).trim();
+
+            if (!name) {
+
+                throw new Error(
+                    "Họ tên không được để trống"
+                );
+
+            }
+
+            user.name = name;
+        }
+
+
+        // ---------------------------------------------
+        // CẬP NHẬT SỐ ĐIỆN THOẠI
+        // ---------------------------------------------
+
+        if (data.phone !== undefined) {
+
+            user.phone =
+                String(data.phone).trim();
+
+        }
+
+
+        // ---------------------------------------------
+        // CẬP NHẬT ĐỊA CHỈ
+        // ---------------------------------------------
+
+        if (data.address !== undefined) {
+
+            user.address =
+                String(data.address).trim();
+
+        }
+
+
+        // ---------------------------------------------
+        // CẬP NHẬT AVATAR
+        // ---------------------------------------------
+
+        if (data.avatar !== undefined) {
+
+            user.avatar =
+                data.avatar;
+
+        }
+
+
+        // Lưu thay đổi xuống MongoDB
+        await user.save();
+
+
+        // Không trả password về Frontend
+        return {
+            id: user._id,
+            name: user.name,
+            fullName: user.name,
+            email: user.email,
+            role: user.role,
+            status: user.status,
+            phone: user.phone,
+            address: user.address,
+            avatar: user.avatar
+        };
+    },
+
+
+    // =====================================================
     // CẬP NHẬT USER
-    // =========================
+    // =====================================================
+    // Chức năng này dành cho ADMIN.
+    // ADMIN có thể sửa thông tin tài khoản khác.
+    // =====================================================
 
     async updateUser(
         id,
@@ -154,7 +274,10 @@ const userService = {
         }
 
         if (data.name !== undefined) {
-            user.name = data.name.trim();
+
+            user.name =
+                data.name.trim();
+
         }
 
         if (data.email !== undefined) {
@@ -176,7 +299,8 @@ const userService = {
                 );
             }
 
-            user.email = normalizedEmail;
+            user.email =
+                normalizedEmail;
         }
 
         if (data.role !== undefined) {
@@ -188,8 +312,10 @@ const userService = {
         }
 
         if (data.status !== undefined) {
+
             user.status =
                 Boolean(data.status);
+
         }
 
         if (
@@ -198,9 +324,11 @@ const userService = {
         ) {
 
             if (data.password.length < 6) {
+
                 throw new Error(
                     "Mật khẩu phải có ít nhất 6 ký tự"
                 );
+
             }
 
             user.password =
@@ -223,9 +351,9 @@ const userService = {
     },
 
 
-    // =========================
+    // =====================================================
     // KHÓA / MỞ KHÓA
-    // =========================
+    // =====================================================
 
     async toggleUserStatus(
         id,
@@ -264,9 +392,9 @@ const userService = {
     },
 
 
-    // =========================
+    // =====================================================
     // XÓA USER
-    // =========================
+    // =====================================================
 
     async deleteUser(
         id,

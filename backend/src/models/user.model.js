@@ -6,12 +6,14 @@ const userSchema = new mongoose.Schema(
         // THÔNG TIN USER
         // =========================
 
+        // Họ và tên
         name: {
             type: String,
             required: true,
             trim: true
         },
 
+        // Email đăng nhập
         email: {
             type: String,
             required: true,
@@ -20,10 +22,35 @@ const userSchema = new mongoose.Schema(
             trim: true
         },
 
+        // Mật khẩu đã được mã hóa
         password: {
             type: String,
             required: true,
             select: false
+        },
+
+        // =========================
+        // THÔNG TIN PROFILE
+        // =========================
+
+        // Số điện thoại
+        phone: {
+            type: String,
+            default: "",
+            trim: true
+        },
+
+        // Địa chỉ
+        address: {
+            type: String,
+            default: "",
+            trim: true
+        },
+
+        // Ảnh đại diện
+        avatar: {
+            type: String,
+            default: ""
         },
 
         // =========================
@@ -71,6 +98,11 @@ const userSchema = new mongoose.Schema(
         timestamps: true
     }
 );
+
+
+// =========================
+// EXPORT MODEL
+// =========================
 
 module.exports = mongoose.model(
     "User",
