@@ -31,24 +31,6 @@ một nền tảng mua bán linh kiện và phụ kiện máy tính trực tuy�
 
 ---
 
-## 📌 Mục lục
-
-- [✨ Giới thiệu](#-giới-thiệu)
-- [🎯 Mục tiêu](#-mục-tiêu)
-- [🚀 Chức năng](#-chức-năng)
-- [🛠️ Công nghệ](#️-công-nghệ)
-- [🏗️ Kiến trúc hệ thống](#️-kiến-trúc-hệ-thống)
-- [📂 Cấu trúc dự án](#-cấu-trúc-dự-án)
-- [⚙️ Cài đặt](#️-cài-đặt)
-- [🔐 Xác thực & phân quyền](#-xác-thực--phân-quyền)
-- [📧 Quên mật khẩu](#-quên-mật-khẩu)
-- [🛒 Quy trình mua hàng](#-quy-trình-mua-hàng)
-- [🔌 API](#-api)
-- [👨‍💻 Thành viên](#-thành-viên)
-- [📄 License](#-license)
-
----
-
 # ✨ Giới thiệu
 
 **PC Store Team** là một website thương mại điện tử chuyên cung cấp:
