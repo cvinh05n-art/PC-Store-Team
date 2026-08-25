@@ -1,58 +1,188 @@
-/* =========================
-   LINK XEM SẢN PHẨM
-========================= */
+/* =========================================
+   TRANG THƯƠNG HIỆU
+   ========================================= */
 
-.brand-products-link {
+.brand-view {
+    min-height: calc(100vh - 80px);
+    padding: 70px 8%;
+    background: #f5f7fb;
+    box-sizing: border-box;
+}
 
-    display: inline-block;
+/* =========================================
+   PHẦN TIÊU ĐỀ
+   ========================================= */
 
-    margin-top: 8px;
+.brand-view-header {
+    max-width: 900px;
+    margin: 0 auto 45px;
+}
 
+.brand-eyebrow {
+    margin: 0 0 12px;
     color: #2563eb;
-
-    text-decoration: none;
-
-    font-weight: 600;
-
-    transition: 0.2s;
-
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 2px;
 }
 
-
-/* Hiệu ứng hover */
-
-.brand-products-link:hover {
-
-    color: #1d4ed8;
-
-    text-decoration: underline;
-
+.brand-view-header h1 {
+    margin: 0 0 15px;
+    color: #111827;
+    font-size: 44px;
+    font-weight: 800;
 }
 
-
-/* =========================
-   THÔNG BÁO LỖI
-========================= */
-
-.brand-error {
-
-    color: #dc2626 !important;
-
+.brand-view-header > p:last-child {
+    margin: 0;
+    color: #64748b;
+    font-size: 18px;
+    line-height: 1.6;
 }
 
+/* =========================================
+   DANH SÁCH THƯƠNG HIỆU
+   ========================================= */
 
-/* =========================
-   KHÔNG CÓ THƯƠNG HIỆU
-========================= */
+.brand-grid {
+    max-width: 1050px;
+    margin: 0 auto;
 
-.brand-empty {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
 
-    grid-column: 1 / -1;
+/* =========================================
+   CARD THƯƠNG HIỆU
+   ========================================= */
 
-    padding: 60px 20px;
+.brand-card {
+    min-height: 220px;
+    padding: 32px 20px;
+
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
     text-align: center;
 
+    box-sizing: border-box;
+
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+/* Hiệu ứng khi rê chuột */
+
+.brand-card:hover {
+    transform: translateY(-6px);
+
+    border-color: #2563eb;
+
+    box-shadow: 0 15px 35px rgba(37, 99, 235, 0.15);
+}
+
+/* =========================================
+   LOGO CHỮ CỦA THƯƠNG HIỆU
+   ========================================= */
+
+.brand-logo {
+    width: 76px;
+    height: 76px;
+
+    margin-bottom: 20px;
+
+    border-radius: 18px;
+
+    background: #eff6ff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #2563eb;
+
+    font-size: 34px;
+    font-weight: 800;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.brand-card:hover .brand-logo {
+    background: #dbeafe;
+    transform: scale(1.05);
+}
+
+/* =========================================
+   TÊN THƯƠNG HIỆU
+   ========================================= */
+
+.brand-card h3 {
+    margin: 0 0 14px;
+
+    color: #111827;
+
+    font-size: 22px;
+    font-weight: 700;
+}
+
+/* =========================================
+   LINK XEM SẢN PHẨM
+   ========================================= */
+
+.brand-card span {
     color: #64748b;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.brand-card:hover span {
+    color: #2563eb;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 1000px) {
+
+    .brand-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .brand-view {
+        padding: 45px 20px;
+    }
+
+    .brand-view-header h1 {
+        font-size: 34px;
+    }
+
+    .brand-grid {
+        grid-template-columns: 1fr;
+    }
 
 }
