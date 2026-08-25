@@ -15,7 +15,14 @@ const productRoutes = require("./routes/product.routes");
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+// Cho phép nhận JSON lớn hơn để hỗ trợ ảnh Base64
+app.use(express.json({limit: "10mb"}));
+
+// Cho phép form URL encoded lớn
+app.use(express.urlencoded({
+    extended: true,
+    limit: "10mb"
+}));
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoutes);
